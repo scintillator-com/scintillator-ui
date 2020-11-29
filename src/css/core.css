@@ -1,0 +1,79 @@
+#page {
+	margin: 0px auto;
+	text-align: left;
+}
+
+body {
+	font-size: 0.8em;
+	margin: 0px;
+	text-align: center;
+}
+
+a, a:visited {
+	text-decoration: none;
+}
+
+a:active, a:hover {
+	text-decoration: underline;
+}
+
+a img {
+	border: 0px;
+	text-decoration: none;
+}
+
+form {
+	margin: 0px;
+}
+
+input, optgroup, option, textarea{
+	font-family: inherit;
+	font-size: inherit;
+}
+
+p {
+	margin-top: 0px;
+}
+
+table {
+	border-collapse: collapse;
+	font-size: 1em;
+}
+
+td, th {
+	border: 1px solid black;
+	padding-left: 2px;
+	padding-right: 2px;
+	vertical-align: top;
+}
+
+ul, li{
+	margin: 0px 0px 0px 1em;
+	padding: 0px;
+}
+
+.mac {
+	margin-left: auto;
+	margin-right: auto;
+}
+.mar {
+	margin-left: auto;
+	margin-right: 0px;
+}
+
+.tac {
+	text-align: center;
+}
+.tal {
+	text-align: left;
+}
+.tar {
+	text-align: right;
+}
+
+.vam {
+	vertical-align: middle;
+}
+.vat {
+	vertical-align: top;
+}

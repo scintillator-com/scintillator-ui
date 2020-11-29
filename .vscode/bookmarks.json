@@ -1,0 +1,22 @@
+[
+	{
+		"path": "$ROOTPATH$\\src\\components\\history.js",
+		"bookmarks": [
+			{
+				"line": 9,
+				"column": 2,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$\\src\\components\\moment.js",
+		"bookmarks": [
+			{
+				"line": 70,
+				"column": 10,
+				"label": ""
+			}
+		]
+	}
+]
