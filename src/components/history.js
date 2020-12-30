@@ -1,15 +1,9 @@
 
 import React from 'react'
+import { Redirect } from "react-router-dom"
 
-import '../css/history.css'
-
-const ellipsis_200 = {
-  display: 'inline-block',
-  maxWidth: '200px',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  verticalAlign: 'text-bottom'
-}
+import CookieStorage from '../lib/cookie'
+import config from '../lib/config'
 
 class History extends React.PureComponent{
   constructor( props ){
@@ -27,24 +21,34 @@ class History extends React.PureComponent{
   async fetchHistory( page, filters ){
     if( !page )
       page = 1
-  
-    let query = `?page=${page}&pageSize=25`
+
+    const query = new URLSearchParams( `page=${page}&pageSize=25` )
     if( filters && Object.keys( filters ).length ){
       for( let [ key, value ] of Object.entries( filters ) ){
-        query += '&'+ encodeURIComponent( key ) +'='+ encodeURIComponent( value )
-      }
-    }
-    
-    const config = {
-      'method': 'GET',
-      'headers': {
-        'Accept': 'application/json'
+        query.append( key, value )
       }
     }
 
+    const authorization = CookieStorage.get( 'authorization' )
+    const init = {
+      mode:    'cors',
+      method:  'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `bearer ${authorization}`
+      }
+    }
+
+    let response = null
     try{
-      const res = await fetch( `http://192.168.1.31/api/1.0/history${query}`, config )
-      const data = await res.json()
+      response = await fetch( `${config.baseURL}/api/1.0/history?${query}`, init )
+    }
+    catch( err ){
+      console.warn( String(err) )
+    }
+
+    const data = await response.json()
+    if( response.status === 200 ){
       data.forEach( moment => {
         moment.request.created = new Date( moment.request.created )
         if( moment.response?.created ){
@@ -53,31 +57,31 @@ class History extends React.PureComponent{
       })
       this.setState({ 'history': data })
     }
-    catch( err ){
-      console.warn( String(err) )
-    }
   }
 
   async fetchJournal( page, filters ){
     if( !page )
       page = 1
   
-    let query = `?page=${page}&pageSize=25`
+    const query = new URLSearchParams( `page=${page}&pageSize=25` )
     if( filters && Object.keys( filters ).length ){
       for( let [ key, value ] of Object.entries( filters ) ){
-        query += '&'+ encodeURIComponent( key ) +'='+ encodeURIComponent( value )
+        query.append( key, value )
       }
     }
-    
-    const config = {
-      'method': 'GET',
-      'headers': {
-        'Accept': 'application/json'
+
+    const authorization = CookieStorage.get( 'authorization' )
+    const init = {
+      mode:    'cors',
+      method:  'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `bearer ${authorization}`
       }
     }
 
     try{
-      const res = await fetch( `http://192.168.1.31/api/1.0/journal${query}`, config )
+      const res = await fetch( `${config.baseURL}/api/1.0/journal?${query}`, init )
       const data = await res.json()
       data.forEach( moment => {
         moment.request.created = new Date( moment.request.created )
@@ -143,6 +147,11 @@ class History extends React.PureComponent{
     return weeks
   }
 
+  static isLoggedIn(){
+    const auth = CookieStorage.get( 'authorization' )
+    return auth && auth.length ? true : false
+  }
+
   static iso8601( date ){
     if( !date )
       date = new Date()
@@ -165,6 +174,10 @@ class History extends React.PureComponent{
   }
 
   render(){
+    if( !History.isLoggedIn() )
+      return <Redirect to="/" />
+
+
     if( !this.state.history ){
       return (
         <span>Loading...</span>
@@ -201,7 +214,7 @@ class History extends React.PureComponent{
     }
 
     return (
-      <table>
+      <table id="history">
       <thead>
       <tr>
         <th></th>
@@ -253,19 +266,19 @@ class History extends React.PureComponent{
 
     const dt = History.iso8601( moment.request.created )
     return (
-      <tr key={moment._id}>
+      <tr key={moment.moment_id}>
         <td><input type="checkbox" name="moment" value={moment._id} /></td>
         <td><span alt={dt} title={dt}>clock</span></td>
         <td><span className={`method-${moment.request.method}`}>{moment.request.method}</span></td>
         <td style={{ whiteSpace: 'nowrap' }}>
           <span className="scheme">{moment.request.scheme}</span>://
           <span className="host">{moment.request.host}</span>
-          <span className="path"  style={ellipsis_200} title={moment.request.path}>{moment.request.path}</span>
-          <span className="query" style={ellipsis_200} title={moment.request.query_string}>{moment.request.query_string ? `?${moment.request.query_string}` : ''}</span>
+          <span className="path ellipsis-200"  title={moment.request.path}>{moment.request.path}</span>
+          <span className="query ellipsis-200" title={moment.request.query_string}>{moment.request.query_string ? `?${moment.request.query_string}` : ''}</span>
         </td>
         {response}
         <td>
-          <a href={`/moment/${moment._id}`}>detail icon</a>
+          <a href={`/moment/${moment.moment_id}`}>detail icon</a>
         </td>
       </tr>
     )

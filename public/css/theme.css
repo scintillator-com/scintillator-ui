@@ -1,0 +1,18 @@
+
+header {
+	background: transparent linear-gradient( to right, #00BBFF, white ) no-repeat left top;
+}
+
+/* https://css-tricks.com/gradient-borders-in-css/ */
+.y2b {
+  border-width: 3px;
+  border-style: solid;
+  border-image: 
+    linear-gradient(
+			to bottom, 
+			#F7F700,
+			white,
+      #00BBFF
+		) 1 100%;
+	padding: 0.5em;
+}

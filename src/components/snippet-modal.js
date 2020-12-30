@@ -10,9 +10,10 @@ class SnippetModal extends React.PureComponent{
     this.state = {
       'snippet': {
         '_id': null,
+        'moment_id': this.props.moment._id,
         'formatter': {
           'name':     'js-fetch',
-          'language': 'js',
+          'language': 'javascript', //
           'library':  'fetch'
         },
         'config': {
@@ -30,24 +31,28 @@ class SnippetModal extends React.PureComponent{
     this.upsetSnippet = this.upsetSnippet.bind( this )
   }
 
+  static cloneSnippet( snippet ){
+    return {
+      '_id': snippet._id,
+      'moment_id': snippet.moment_id,
+      'formatter': {
+        'name':     snippet.formatter.name,
+        'language': snippet.formatter.language,
+        'library':  snippet.formatter.library
+      },
+      'config': {
+        'method':   snippet.config.method,
+        'decode':   snippet.config.decode,
+        'body_params':   snippet.config.body_params.slice(),
+        'header_params': snippet.config.header_params.slice(),
+        'query_params':  snippet.config.query_params.slice()
+      }
+    }
+  }
+
   handleChange( e ){
     this.setState( state => {
-      //clone
-      const snippet = {
-        '_id': state.snippet._id,
-        'formatter': {
-          'name':     state.snippet.formatter.name,
-          'language': state.snippet.formatter.language,
-          'library':  state.snippet.formatter.library
-        },
-        'config': {
-          'method':   state.snippet.config.method,
-          'decode':   state.snippet.config.decode,
-          'body_params':   state.snippet.config.body_params.slice(),
-          'header_params': state.snippet.config.header_params.slice(),
-          'query_params':  state.snippet.config.query_params.slice()
-        }
-      }
+      const snippet = SnippetModal.cloneSnippet( state.snippet )
 
       //update
       let any = false
@@ -79,6 +84,17 @@ class SnippetModal extends React.PureComponent{
     }
 
     //TODO: if _id, provide preview...
+    let operation = 'Create Snippet', preview = null
+    if( this.state.snippet._id ){
+      operation = 'Update Snippet'
+
+      preview = (
+        <>
+          <hr style={{clear: 'both'}} />
+          <iframe title="Snippet Preview" src={`http://192.168.1.31/snippet.php?id=${this.state.snippet._id}`} height="500" width="100%"></iframe>
+        </>
+      )
+    }
 
     return (
       <div id="snippet-wrapper">
@@ -89,7 +105,9 @@ class SnippetModal extends React.PureComponent{
           {this.renderRequest( this.props.moment.request, true )}
           </table>
           <br />
-          <button style={{ float: 'right' }} onClick={this.upsetSnippet}>Create Snippet</button>
+          <button style={{ float: 'right' }} onClick={this.upsetSnippet}>{operation}</button>
+
+          {preview}
         </div>
       </div>
     )
@@ -225,12 +243,12 @@ class SnippetModal extends React.PureComponent{
   }
 
   async upsetSnippet( e ){
-    debugger
-
     const config = {
       'headers': {
-        'Accept': 'application/json'
-      }
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      'body': JSON.stringify( this.state.snippet )
     }
 
     let url
@@ -245,11 +263,25 @@ class SnippetModal extends React.PureComponent{
 
     try{
       const res = await fetch( url, config )
-      const data = await res.json()
-      debugger
+      if( 200 <= res.status && res.status < 300 ){
+        const data = await res.json()
+        if( config.method === 'POST' ){
+          this.setState( state => {
+            const snippet = SnippetModal.cloneSnippet( state.snippet )
+            snippet._id = data._id
+            return { snippet }
+          })
+        }
+        else{
+          //NA
+        }
+      }
+      else{
+        //TODO
+      }
     }
     catch( err ){
-      console.warn( String(err) )
+      console.error( String(err) )
     }
   }
 }

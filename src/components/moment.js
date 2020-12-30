@@ -1,6 +1,11 @@
 
 import React from 'react'
+import { Redirect } from "react-router-dom"
+
 import SnippetModal from './snippet-modal'
+
+import CookieStorage from '../lib/cookie'
+import config from '../lib/config'
 
 class Moment extends React.PureComponent{
   constructor( props ){
@@ -22,22 +27,31 @@ class Moment extends React.PureComponent{
   }
 
   async fetchMoment( id ){
-    const config = {
-      'method': 'GET',
-      'headers': {
-        'Accept': 'application/json'
+    const authorization = CookieStorage.get( 'authorization' )
+    const init = {
+      mode:    'cors',
+      method:  'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `bearer ${authorization}`
       }
     }
 
+    let response = null
     try{
-      const res = await fetch( `http://192.168.1.31/api/1.0/moment/${id}`, config )
-      const moment = await res.json()
-      if( moment ){
-        this.setState({ moment })
-      }
+      response = await fetch( `${config.baseURL}/api/1.0/moment/${id}`, init )
     }
     catch( err ){
       console.warn( String(err) )
+    }
+
+    if( response ){
+      const data = await response.json()
+      if( response.status === 200 ){
+        if( data ){
+          this.setState({ 'moment': data })
+        }
+      }
     }
   }
 
@@ -48,7 +62,16 @@ class Moment extends React.PureComponent{
     this.setState({ 'showSnippetModal': false })
   }
 
+  static isLoggedIn(){
+    const auth = CookieStorage.get( 'authorization' )
+    return auth && auth.length ? true : false
+  }
+
   render(){
+    if( !Moment.isLoggedIn() )
+      return <Redirect to="/" />
+
+
     if( !this.state.moment ){
       return (
         <span>Loading...</span>
@@ -58,7 +81,7 @@ class Moment extends React.PureComponent{
     return (
       <>
         {this.state.showSnippetModal ?
-          this.renderModal( this.state.moment.request ) : null}
+          this.renderModal( this.state.moment ) : null}
 
         <table>
         {this.renderRequest( this.state.moment.request )}
@@ -106,8 +129,8 @@ class Moment extends React.PureComponent{
     }
   }
 
-  renderModal( request ){
-    return <SnippetModal handleModalClose={this.handleModalClose} moment={this.state.moment} />
+  renderModal( moment ){
+    return <SnippetModal handleModalClose={this.handleModalClose} moment={moment} />
   }
 
   renderRequest( request ){
