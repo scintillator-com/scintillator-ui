@@ -10,6 +10,8 @@
 
 #snippet {
   background: white;
+  border: 2px solid black;
+  border-radius: 5px;
   height: 600px;
   margin: auto;
   padding: 1em;
@@ -19,14 +21,26 @@
 }
 
 #snippet a.close {
+  color: red;
   display: block;
   font-size: 20px;
   font-weight: bold;
   height: 20px;
   position: absolute;
   right: 0;
+  text-decoration: none;
   top: 0;
   width: 20px;
+}
+
+#snippet td,
+#snippet th {
+  border: 1px solid gray;
+  border-collapse: collapse;
+}
+
+#snippet td.no-wrap {
+  white-space: nowrap;
 }
 
 #snippet td.fixed-300 {
@@ -34,4 +48,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tac {
+	text-align: center;
 }

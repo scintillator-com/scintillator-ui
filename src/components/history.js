@@ -2,6 +2,8 @@
 import React from 'react'
 import { Redirect } from "react-router-dom"
 
+import {ClockIcon, EllipsisIcon, LockIcon, UnlockIcon} from '@primer/octicons-react'
+
 import CookieStorage from '../lib/cookie'
 import config from '../lib/config'
 
@@ -248,10 +250,26 @@ class History extends React.PureComponent{
   static renderRow( moment ){
     let response = null
     if( moment.response ){
+      let label = ''
+      let square = ''
+
+      //ref: https://github.com/collections/programming-languages
+      switch( moment.response.content_type ){
+        case 'application/json':
+          label  = <span itemProp="programmingLanguage">JSON</span>
+          square = <span className="repo-language-color" style={{ backgroundColor: '#f1e05a' }}></span>
+          break
+
+        default:
+          label  = <span itemProp="programmingLanguage">{moment.response.content_type}</span>
+          square = <span className="repo-language-color" style={{ backgroundColor: 'gray' }}></span>
+          break
+      }
+
       response = (
         <>
-          <td><span className={`status-${moment.response.status_code}`}>{moment.response.status_code}</span></td>
-          <td><span className="response-type">{moment.response.content_type}</span></td>
+          <td className="status-code"><span className={`highlight status-${moment.response.status_code}`} title={moment.response.status_code}>{moment.response.status_code}</span></td>
+          <td className="response-type" title={moment.response.content_type}>{square}{label}</td>
         </>
       )
     }
@@ -264,21 +282,29 @@ class History extends React.PureComponent{
       )
     }
 
+    let scheme = (
+      <span title={moment.request.scheme}>{
+        moment.request.scheme === 'https' ?
+          <LockIcon size="small" /> :
+          <UnlockIcon size="small" />
+      }</span>
+    )
+
     const dt = History.iso8601( moment.request.created )
     return (
       <tr key={moment.moment_id}>
         <td><input type="checkbox" name="moment" value={moment._id} /></td>
-        <td><span alt={dt} title={dt}>clock</span></td>
-        <td><span className={`method-${moment.request.method}`}>{moment.request.method}</span></td>
+        <td><span title={dt}><ClockIcon size="small" /></span></td>
+        <td className="request-method"><span className={`highlight method-${moment.request.method}`} title={moment.request.method}>{moment.request.method}</span></td>
         <td style={{ whiteSpace: 'nowrap' }}>
-          <span className="scheme">{moment.request.scheme}</span>://
-          <span className="host">{moment.request.host}</span>
-          <span className="path ellipsis-200"  title={moment.request.path}>{moment.request.path}</span>
-          <span className="query ellipsis-200" title={moment.request.query_string}>{moment.request.query_string ? `?${moment.request.query_string}` : ''}</span>
+          <span className="scheme">{scheme}</span>
+          {/* <span className="host">{moment.request.host}</span> */}
+          <span className="path ellipsis ellipsis-300 rtl"  title={moment.request.path}>{moment.request.path}</span>
+          <span className="query ellipsis ellipsis-200" title={moment.request.query_string}>{moment.request.query_string ? `?${moment.request.query_string}` : ''}</span>
         </td>
         {response}
         <td>
-          <a href={`/moment/${moment.moment_id}`}>detail icon</a>
+          <a href={`/moment/${moment.moment_id}`} style={{ color: 'gray' }}><EllipsisIcon size="small" /></a>
         </td>
       </tr>
     )

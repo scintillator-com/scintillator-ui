@@ -1,50 +1,79 @@
 
-.ellipsis-200 {
+.ellipsis {
   display: inline-block;
-  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: text-bottom;
 }
 
+.ellipsis-200 {
+  max-width: 200px;
+}
+
+.ellipsis-300 {
+  max-width: 300px;
+}
+
+.highlight {
+	border-radius: 4px;
+	font-size: 0.8em;
+	padding: 2px 4px;
+}
+
 .method-GET {
 	background: #80ff80;
-	border-radius: 4px;
-	padding: 3px 5px;
 }
 
 .method-POST {
 	background: #ff9090;
-	border-radius: 4px;
-	padding: 3px 5px;
+}
+
+/*
+  src: https://github.com/collections/programming-languages
+*/
+.repo-language-color {
+	border: 1px solid var(--color-repo-language-color-border);
+	border-radius: 50%;
+	display: inline-block;
+	height: 12px;
+	margin-right: 0.2em;
+	position: relative;
+	top: 1px;
+	width: 12px;
+}
+
+.rtl {
+	direction: rtl;
+}
+
+.response-type {
+  font-size: 0.8em;
 }
 
 .status-200 {
 	background: #9090ff;
-	border-radius: 4px;
-	padding: 3px 5px;
 }
 
 .status-201 {
 	background: #6060ff;
-	border-radius: 4px;
-	padding: 3px 5px;
 }
 
 .status-204 {
 	background: #a0a0ff;
-	border-radius: 4px;
-	padding: 3px 5px;
+}
+
+.status-400 {
+	background: #ffcc99;
 }
 
 .status-401 {
 	background: #ff9090;
-	border-radius: 4px;
-	padding: 3px 5px;
+}
+
+.status-404 {
+	background: #aaaaaa;
 }
 
 .status-409 {
 	background: #ff4848;
-	border-radius: 4px;
-	padding: 3px 5px;
 }
