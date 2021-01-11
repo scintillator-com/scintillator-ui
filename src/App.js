@@ -2,16 +2,35 @@
 import React from 'react'
 import { BrowserRouter, Link, Route, Switch } from "react-router-dom"
 
-import Home from './components/home.js'
-import History from './components/history.js'
+//public
+import _404 from './components/pub/404.js'
+import Default from './components/default.js'
+
+//private
+import Dashboard from './components/priv/dashboard.js'
+import History from './components/priv/history.js'
+
+//mixed
 import Moment from './components/moment.js'
 
+//data
 import CookieStorage from './lib/cookie'
 
+
 class App extends React.PureComponent{
+  constructor(){
+    super()
+
+    this.onLogin = this.onLogin.bind( this )
+  }
+
   static isLoggedIn(){
     const auth = CookieStorage.get( 'authorization' )
     return auth && auth.length ? true : false
+  }
+
+  onLogin(){
+    this.forceUpdate()
   }
 
   render(){
@@ -28,7 +47,7 @@ class App extends React.PureComponent{
   renderHeader(){
     return (
       <header>
-        <h1>Scintillator</h1>
+        <h1><Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>Scintillator</Link></h1>
       </header>
     )
   }
@@ -61,10 +80,13 @@ class App extends React.PureComponent{
 
           <main id="main" className="col-md-8 col-lg-9 col-xl-10 ml-sm-auto pt-3 px-4">
             <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/history" component={History} />
+              <Route exact path="/">
+                <Default onLogin={this.onLogin} />
+              </Route>
+              <Route path="/dashboard" component={Dashboard} />
+              <Route path="/history/:project" component={History} />
               <Route path="/moment/:momentId" render={props => <Moment {...props} />} />
-              <Route path="/*">404</Route>
+              <Route path="/*" component={_404}>404</Route>
             </Switch>
           </main>
         </div>

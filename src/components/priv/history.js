@@ -4,27 +4,47 @@ import { Redirect } from "react-router-dom"
 
 import {ClockIcon, EllipsisIcon, LockIcon, UnlockIcon} from '@primer/octicons-react'
 
-import CookieStorage from '../lib/cookie'
-import config from '../lib/config'
+import CookieStorage from '../../lib/cookie'
+import config from '../../lib/config'
 
 class History extends React.PureComponent{
   constructor( props ){
     super( props )
 
+    this.hasMore = true
+    this.host = this.props.match.params.project
+    this.page = 1
+    this.pageSize = 25
     this.state = {
-      history: null
+      'history': null
     }
+
+    this.loadMore = this.loadMore.bind( this )
   }
 
   componentDidMount(){
-    this.fetchHistory() 
+    this.fetchMoments({
+      'host': this.host,
+      'page': this.page,
+      'pageSize': this.pageSize
+    })
   }
 
-  async fetchHistory( page, filters ){
-    if( !page )
-      page = 1
+  async fetchMoments( filters ){
+    if( !this.hasMore )
+      return
 
-    const query = new URLSearchParams( `page=${page}&pageSize=25` )
+
+    const query = new URLSearchParams( '' )
+
+    /*
+    if( this.momentDefaults && Object.keys( this.momentDefaults ).length ){
+      for( let [ key, value ] of Object.entries( this.momentDefaults ) ){
+        query.append( key, value )
+      }
+    }
+    */
+
     if( filters && Object.keys( filters ).length ){
       for( let [ key, value ] of Object.entries( filters ) ){
         query.append( key, value )
@@ -49,15 +69,32 @@ class History extends React.PureComponent{
       console.warn( String(err) )
     }
 
-    const data = await response.json()
+    const moments = await response.json()
     if( response.status === 200 ){
-      data.forEach( moment => {
+      moments.forEach( moment => {
         moment.request.created = new Date( moment.request.created )
         if( moment.response?.created ){
           moment.response.created = new Date( moment.response.created )
         }
       })
-      this.setState({ 'history': data })
+
+      if( moments && moments.length ){
+        if( this.state.history ){
+          this.setState({
+            'history': [ ...this.state.history, ...moments ],
+            'page':    filters.page
+          })
+        }
+        else{
+          this.setState({
+            'history': moments,
+            'page':    filters.page
+          })
+        }
+      }
+      else{
+        this.hasMore = false
+      }
     }
   }
 
@@ -168,6 +205,16 @@ class History extends React.PureComponent{
     return `${year}-${month}-${day} ${hour}-${min}-${sec}`
   }
 
+  loadMore(){
+    ++this.page;
+
+    this.fetchMoments({
+      'host': this.host,
+      'page': this.page,
+      'pageSize': this.pageSize
+    })
+  }
+
   static pad( num ){
     if( String( num ).length === 2 )
       return `${num}`
@@ -215,21 +262,34 @@ class History extends React.PureComponent{
       sections.push( History.renderHistory( 'Older', older ) )
     }
 
+    let moreButton = null
+    if( this.hasMore ){
+      moreButton = [
+        <br key="br" />,
+        <button key="more-button" onClick={this.loadMore}>More...</button>
+      ]
+    }
+
     return (
-      <table id="history">
-      <thead>
-      <tr>
-        <th></th>
-        <th>Date</th>
-        <th>Method</th>
-        <th>URL</th>
-        <th>Status</th>
-        <th>Type</th>
-        <th></th>
-      </tr>
-      </thead>
-      {sections}
-      </table>
+      <div>
+        <h3 className="tac" style={{ background: '#ccc' }}>{this.host}</h3>
+        <table id="history">
+        <thead>
+        <tr>
+          <th></th>
+          <th>Date</th>
+          <th>Method</th>
+          <th>URL</th>
+          <th>Status</th>
+          <th>Type</th>
+          <th></th>
+        </tr>
+        </thead>
+        {sections}
+        </table>
+
+        {moreButton}
+      </div>
     )
   }
 

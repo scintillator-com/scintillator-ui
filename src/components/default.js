@@ -6,14 +6,14 @@ import LogIn from './pub/log-in'
 
 import CookieStorage from '../lib/cookie'
 
-function Home( props ){
+function Default( props ){
   const isLoggedIn = () => {
     const auth = CookieStorage.get( 'authorization' )
     return auth && auth.length ? true : false
   }
 
   if( isLoggedIn() ){
-    return <Redirect to="/history" />
+    return <Redirect to="/dashboard" />
   }
   else{
     return (
@@ -24,10 +24,10 @@ function Home( props ){
           <Link to="/href"><button className="btn btn-primary">Sign Up</button></Link>
         </div>
 
-        <LogIn />
+        <LogIn onLogin={props.onLogin} />
       </div>
     )
   }
 }
 
-export default Home
+export default Default

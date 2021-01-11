@@ -10,9 +10,6 @@ class LogIn extends React.PureComponent{
     super( props )
 
     this.logIn = this.logIn.bind( this )
-    this.state = {
-      isLoggedIn: LogIn.isLoggedIn()
-    }
   }
 
   async fetchLogIn( username, password ){
@@ -41,7 +38,7 @@ class LogIn extends React.PureComponent{
       const expires = new Date( data.expires )
       const maxAge = Math.floor( (expires.getTime() - Date.now()) / 1000 )
       CookieStorage.set( 'authorization', data.token, { expires, maxAge })
-      this.setState({ isLoggedIn: true })
+      this.props.onLogin()
     }
     //else if( response.status === 401 ){
     //  data = await response.json()
@@ -64,10 +61,6 @@ class LogIn extends React.PureComponent{
   }
 
   render(){
-    if( this.state.isLoggedIn )
-      return <Redirect to="/history" />
-
-
     return (
       <div className="col-md-4 col-lg-3 col-xl-2 d-md-block bg-light sidebar">
         <form id="log-in-form">
