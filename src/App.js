@@ -15,6 +15,7 @@ import Moment from './components/moment.js'
 
 //data
 import CookieStorage from './lib/cookie'
+import UserSignUp from './components/pub/sign-up/user.js'
 
 
 class App extends React.PureComponent{
@@ -86,6 +87,7 @@ class App extends React.PureComponent{
               <Route path="/dashboard" component={Dashboard} />
               <Route path="/history/:project" component={History} />
               <Route path="/moment/:momentId" render={props => <Moment {...props} />} />
+              <Route path="/sign-up" component={UserSignUp} />
               <Route path="/*" component={_404}>404</Route>
             </Switch>
           </main>
