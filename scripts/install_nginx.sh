@@ -18,6 +18,6 @@ sudo systemctl enable nginx.service
 
 # NGINX: permissions
 echo "Securing /usr/share/nginx/html/..."
-sudo chown -R nginx:nginx /usr/share/nginx/html
-sudo chmod -R ug=rX /usr/share/nginx/html
-sudo chmod -R o=-rwx /usr/share/nginx/html
+sudo chown -R nginx:nginx /usr/share/nginx/html/
+sudo chmod -R ug=rX /usr/share/nginx/html/
+sudo chmod -R o=-rwx /usr/share/nginx/html/
