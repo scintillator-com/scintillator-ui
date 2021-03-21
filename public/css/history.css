@@ -1,4 +1,8 @@
 
+#history {
+	width: 100%;
+}
+
 .ellipsis {
   display: inline-block;
   overflow: hidden;
@@ -48,6 +52,7 @@
 
 .response-type {
   font-size: 0.8em;
+	white-space: nowrap;
 }
 
 .status-200 {

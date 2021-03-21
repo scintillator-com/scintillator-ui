@@ -136,8 +136,8 @@ class SnippetModal extends React.PureComponent{
       </tr>
       <tr>
         <td className="tac"><input type="checkbox" checked disabled /></td>
-        <td align="right">path</td>
-        <td>{request.path}</td>
+        <td>path</td>
+        <td className="fixed-300" title={request.path}>{request.path}</td>
       </tr>
 
       {this.renderQuery( request )}

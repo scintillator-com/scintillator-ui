@@ -13,7 +13,7 @@ function Default( props ){
   }
 
   if( isLoggedIn() ){
-    return <Redirect to="/dashboard" />
+    return <Redirect to="/projects" />
   }
   else{
     return (

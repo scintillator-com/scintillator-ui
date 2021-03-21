@@ -16,7 +16,8 @@ class History extends React.PureComponent{
     this.page = 1
     this.pageSize = 25
     this.state = {
-      'history': null
+      'history': null,
+      'page': -1
     }
 
     this.loadMore = this.loadMore.bind( this )
@@ -79,6 +80,7 @@ class History extends React.PureComponent{
       })
 
       if( moments && moments.length ){
+        this.hasMore = moments.length === filters.pageSize
         if( this.state.history ){
           this.setState({
             'history': [ ...this.state.history, ...moments ],
@@ -276,13 +278,13 @@ class History extends React.PureComponent{
         <table id="history">
         <thead>
         <tr>
-          <th></th>
-          <th>Date</th>
-          <th>Method</th>
+          <th width="20"></th>
+          <th className="tac" width="50">Date</th>
+          <th className="tac" width="80">Method</th>
           <th>URL</th>
-          <th>Status</th>
-          <th>Type</th>
-          <th></th>
+          <th className="tac" width="70">Status</th>
+          <th className="tac" width="70">Type</th>
+          <th width="30"></th>
         </tr>
         </thead>
         {sections}
@@ -328,7 +330,7 @@ class History extends React.PureComponent{
 
       response = (
         <>
-          <td className="status-code"><span className={`highlight status-${moment.response.status_code}`} title={moment.response.status_code}>{moment.response.status_code}</span></td>
+          <td className="status-code tac"><span className={`highlight status-${moment.response.status_code}`} title={moment.response.status_code}>{moment.response.status_code}</span></td>
           <td className="response-type" title={moment.response.content_type}>{square}{label}</td>
         </>
       )
@@ -353,9 +355,9 @@ class History extends React.PureComponent{
     const dt = History.iso8601( moment.request.created )
     return (
       <tr key={moment.moment_id}>
-        <td><input type="checkbox" name="moment" value={moment._id} /></td>
-        <td><span title={dt}><ClockIcon size="small" /></span></td>
-        <td className="request-method"><span className={`highlight method-${moment.request.method}`} title={moment.request.method}>{moment.request.method}</span></td>
+        <td className="tac"><input type="checkbox" name="moment" value={moment._id} /></td>
+        <td className="tac"><span title={dt}><ClockIcon size="small" /></span></td>
+        <td className="request-method tac"><span className={`highlight method-${moment.request.method}`} title={moment.request.method}>{moment.request.method}</span></td>
         <td style={{ whiteSpace: 'nowrap' }}>
           <span className="scheme">{scheme}</span>
           {/* <span className="host">{moment.request.host}</span> */}
@@ -363,7 +365,7 @@ class History extends React.PureComponent{
           <span className="query ellipsis ellipsis-200" title={moment.request.query_string}>{moment.request.query_string ? `?${moment.request.query_string}` : ''}</span>
         </td>
         {response}
-        <td>
+        <td className="tac">
           <a href={`/moment/${moment.moment_id}`} style={{ color: 'gray' }}><EllipsisIcon size="small" /></a>
         </td>
       </tr>

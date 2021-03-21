@@ -7,7 +7,7 @@ import {LockIcon, UnlockIcon} from '@primer/octicons-react'
 import CookieStorage from '../../lib/cookie'
 import Scintillator from '../../lib/api'
 
-class Dashboard extends React.PureComponent{
+class Project extends React.PureComponent{
   constructor( props ){
     super( props )
 
@@ -25,7 +25,7 @@ class Dashboard extends React.PureComponent{
   }
 
   render(){
-    if( !Dashboard.isLoggedIn() )
+    if( !Project.isLoggedIn() )
       return <Redirect to="/" />
 
 
@@ -57,7 +57,7 @@ class Dashboard extends React.PureComponent{
           }
           else{
             return (
-              <Link to={`/history/${project.host}`} key={project.host} className="project">
+              <Link to={`/project/${project.host}`} key={project.host} className="project">
                 <UnlockIcon className="octicon unlocked"/>
                 <span className="moments">{project.moments} Moments</span>
                 <span className="host">{project.host}</span>
@@ -81,4 +81,4 @@ class Dashboard extends React.PureComponent{
   }
 }
 
-export default Dashboard
+export default Project
