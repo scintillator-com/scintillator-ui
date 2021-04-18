@@ -143,7 +143,7 @@ class App extends React.PureComponent{
               <Route path="/projects" render={props => <Project {...props} projects={this.state.projects} setProjects={this.setProjects} />} />
               <Route path="/moment/:momentId" render={props => <Moment {...props} />} />
               <Route path="/sign-up" component={UserSignUp} />
-              <Route path="/*" component={_404}>404</Route>
+              <Route path="/*" component={_404} />
             </Switch>
           </main>
         </div>
