@@ -57,7 +57,8 @@ class FormValidator{
     const data = {}
     for( let input of form ){
       if( input.name ){
-      data[ input.name ] = input.value
+        const name = FormValidator.getFieldName( input )
+        data[ name ] = input.value
       }
     }
     return data
@@ -116,6 +117,9 @@ class FormValidator{
             }
             catch( err ){
               if( err instanceof ValidationError ){
+                if( !err.input )
+                  console.warn( `This missing input is '${fieldName}'` )
+
                 errors.push( err )
                 break
               }

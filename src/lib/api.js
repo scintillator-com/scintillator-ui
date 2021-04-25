@@ -3,6 +3,94 @@ import CookieStorage from './cookie'
 import config from './config'
 
 class Scintillator{
+  static async fetchCreateOrg( args ){
+    const auth = CookieStorage.get( 'authorization' )
+
+    const init = {
+      mode:   'cors',
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${auth}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( args )
+    }
+
+    try{
+      return await fetch( `${config.baseURL}/api/1.0/org`, init )
+    }
+    catch( err ){
+      console.error( `${err}` )
+      throw err
+    }
+  }
+
+  static async fetchCreateSnippet( snippet ){
+    const authorization = CookieStorage.get( 'authorization' )
+    const init = {
+      mode:    'cors',
+      method:  'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `bearer ${authorization}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( this.state.snippet )
+    }
+
+    try{
+      return await fetch( `${config.baseURL}/api/1.0/snippet`, init )
+    }
+    catch( err ){
+      console.error( `${err}` )
+      throw err
+    }
+  }
+
+  static async fetchCreateUser( args ){
+    const init = {
+      mode:   'cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( args )
+    }
+
+    const auth = CookieStorage.get( 'authorization' )
+    if( auth ){
+      init.headers.Authorization = `Bearer ${auth}`
+    }
+
+    try{
+      return await fetch( `${config.baseURL}/api/1.0/user`, init )
+    }
+    catch( err ){
+      console.error( `${err}` )
+      throw err
+    }
+  }
+
+  static async fetchJournal( query ){
+    const authorization = CookieStorage.get( 'authorization' )
+    const init = {
+      mode:    'cors',
+      method:  'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `bearer ${authorization}`
+      }
+    }
+
+    try{
+      return await fetch( `${config.baseURL}/api/1.0/journal?${query}`, init )
+    }
+    catch( err ){
+      console.error( `${err}` )
+      throw err
+    }
+  }
+
   static async fetchLogIn( username, password ){
     const init = {
       mode:   'cors',
@@ -16,23 +104,52 @@ class Scintillator{
       })
     }
 
-    let response = null
     try{
-      response = await fetch( `${config.baseURL}/api/1.0/login`, init )
+      return await fetch( `${config.baseURL}/api/1.0/login`, init )
     }
     catch( err ){
-      debugger
+      console.error( `${err}` )
+      throw err
+    }
+  }
+
+  static async fetchMoment( id ){
+    const authorization = CookieStorage.get( 'authorization' )
+    const init = {
+      mode:    'cors',
+      method:  'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `bearer ${authorization}`
+      }
     }
 
-    const data = await response.json()
-    if( response.status === 200 ){
-      return data
+    try{
+      return await fetch( `${config.baseURL}/api/1.0/moment/${id}`, init )
     }
-    //else if( response.status === 401 ){
-    //  data = await response.json()
-    //}
-    else{
-      throw new Error( `Oops: ${data.code} - ${data.message}` )
+    catch( err ){
+      console.error( `${err}` )
+      throw err
+    }
+  }
+
+  static async fetchMoments( query ){
+    const authorization = CookieStorage.get( 'authorization' )
+    const init = {
+      mode:    'cors',
+      method:  'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `bearer ${authorization}`
+      }
+    }
+
+    try{
+      return await fetch( `${config.baseURL}/api/1.0/history?${query}`, init )
+    }
+    catch( err ){
+      console.error( `${err}` )
+      throw err
     }
   }
 
@@ -57,33 +174,34 @@ class Scintillator{
       }
     }
 
-    let response = null
     try{
-      response = await fetch( `${config.baseURL}/api/1.0/project?${query}`, init )
+      return await fetch( `${config.baseURL}/api/1.0/project?${query}`, init )
     }
     catch( err ){
-      console.warn( String(err) )
-      //no response...
-      return []
+      console.error( `${err}` )
+      throw err
+    }
+  }
+
+  static async fetchUpdateSnippet( snippet ){
+    const authorization = CookieStorage.get( 'authorization' )
+    const init = {
+      mode:    'cors',
+      method:  'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `bearer ${authorization}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( snippet )
     }
 
-    let data = {}
     try{
-      data = await response.json()
+      return await fetch( `${config.baseURL}/api/1.0/snippet/${snippet.snippet_id}`, init )
     }
     catch( err ){
-      console.warn( String(err) )
-    }
-
-    if( response.status === 200 ){
-      data.forEach( project => {
-        project.created = new Date( project.created )
-      })
-      return data
-    }
-    else{
-      console.warn( data )
-      return []
+      console.error( `${err}` )
+      throw err
     }
   }
 
@@ -102,34 +220,12 @@ class Scintillator{
       })
     }
 
-    let response = null
     try{
-      response = await fetch( `${config.baseURL}/api/1.0/project`, init )
+      return await fetch( `${config.baseURL}/api/1.0/project`, init )
     }
     catch( err ){
-      console.warn( String(err) )
-      //no response...
-      return
-    }
-
-    let data = {}
-    try{
-      data = await response.json()
-    }
-    catch( err ){
-      console.warn( String(err) )
-    }
-
-    if( response.status === 201 ){
-      return data
-    }
-    //401 Unauthorized: please login
-    //402 Payment Required: please upgrade or prompt for purchase 
-    //409 Conflict: please contact support
-    else{
-      //oops
-      console.warn( data )
-      throw new Error()
+      console.error( `${err}` )
+      throw err
     }
   }
 }

@@ -5,10 +5,14 @@ import CookieStorage from '../lib/cookie'
 import config from '../lib/config'
 
 import './snippet-modal.css'
+import Scintillator from '../lib/api'
 
 class SnippetModal extends React.PureComponent{
   constructor( props ){
     super( props )
+
+    debugger
+    //TODO: props.formatter
 
     this.state = {
       'snippet': {
@@ -272,27 +276,30 @@ class SnippetModal extends React.PureComponent{
       url = `${config.baseURL}/api/1.0/snippet/${this.state.snippet.snippet_id}`
     }
 
+    let response
     try{
-      const res = await fetch( url, init )
-      if( 200 <= res.status && res.status < 300 ){
-        const data = await res.json()
-        if( init.method === 'POST' ){
-          this.setState( state => {
-            const snippet = SnippetModal.cloneSnippet( state.snippet )
-            snippet.snippet_id = data.snippet_id
-            return { snippet }
-          })
-        }
-        else{
-          //NA
-        }
-      }
-      else{
-        //TODO
-      }
+      if( this.state.snippet.snippet_id )
+        response = await Scintillator.fetchUpdateSnippet( this.state.snippet )
+      else
+        response = await Scintillator.fetchCreateSnippet( this.state.snippet )
     }
     catch( err ){
-      console.error( String(err) )
+      alert( `Oops please try again soon` )
+      return false
+    }
+
+    if( response.ok ){
+      const data = await response.json()
+      this.setState( state => {
+        const snippet = SnippetModal.cloneSnippet( state.snippet )
+        snippet.snippet_id = data.snippet_id
+        return { snippet }
+      })
+    }
+    else{
+      const data = await response.json()
+      alert( `Oops: ${data.code} - ${data.message}` )
+      return false
     }
   }
 }

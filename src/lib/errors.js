@@ -6,6 +6,12 @@ export class ValidationError extends Error{
 
   constructor( msg, code, prev, input ){
     super( msg, code, prev )
-    this.input = input
+
+    if( input ){
+      this.input = input
+    }
+    else{
+      console.error( 'ValidationError requires the invalid input' )
+    }
   }
 }
