@@ -7,6 +7,7 @@ import _404 from './components/pub/404.js'
 import Default from './components/default.js'
 import LogOut from './components/pub/log-out.js'
 import UserSignUp from './components/pub/sign-up/user.js'
+import Nav from './components/pub/nav.js'
 
 //private
 import History from './components/priv/history.js'
@@ -63,8 +64,12 @@ class App extends React.PureComponent{
   renderHeader(){
     return (
       <header>
-        <h4 style={{ float: 'right' }}><Link to="/log-out" style={{ color: 'inherit', textDecoration: 'none' }}>Log Out</Link></h4>
+        {/* <h4 style={{ float: 'right' }}><Link to="/log-out" style={{ color: 'inherit', textDecoration: 'none' }}>Log Out</Link></h4>
         <h1><Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>Scintillator</Link></h1>
+
+        These notification icons really should be their own components.
+        */}
+        <Nav />
       </header>
     )
   }

@@ -2,6 +2,14 @@
 header {
 	background: transparent linear-gradient( to right, #00BBFF, white ) no-repeat left top;
 }
+header::after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-image: linear-gradient(to left,#F7F700,white,#00BBFF);
+}
 
 /* https://css-tricks.com/gradient-borders-in-css/ */
 .y2b {
