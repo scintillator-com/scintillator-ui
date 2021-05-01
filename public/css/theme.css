@@ -2,9 +2,8 @@
 header {
 	background: transparent linear-gradient( to right, #00BBFF, white ) no-repeat left top;
 }
-header::after {
+header::after, div.subject-text::after {
     content: "";
-    position: absolute;
     display: block;
     width: 100%;
     height: 3px;

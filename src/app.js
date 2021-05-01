@@ -128,11 +128,6 @@ class App extends React.PureComponent{
         </nav>
       )
     }
-    else{
-      return (
-        <nav id="left-nav" className="col-md-4 col-lg-3 col-xl-2 d-md-block bg-light sidebar" />
-      )
-    }
   }
 
   renderMain(){
@@ -141,7 +136,7 @@ class App extends React.PureComponent{
         <div className="row">
           {this.renderLeftNav()}
 
-          <main id="main" className="col-md-8 col-lg-9 col-xl-10 ml-sm-auto pt-3 px-4">
+          <main id="main" className="container-fluid">
             <Switch>
               <Route exact path="/">
                 <Default onLogin={this.onLogin} />

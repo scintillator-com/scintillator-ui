@@ -179,89 +179,81 @@ class UserSignUp extends React.PureComponent{
 
   render(){
     return (
-      <form id="user-sign-up" className="form-group" onSubmit={this.handleSubmit}>
-        <div className="row justify-content-center">
-          <div className="col-4 d-md-block bg-light">
-            <fieldset style={{ marginBottom: '2em' }}>
-              <legend><h3>My Org</h3></legend>
+      <div>
+        <form id="user-sign-up" className="form-group" onSubmit={this.handleSubmit}>
+          <div className="row justify-content-center my-4">
+            <div className="col-md-6 col-xs-12 pb-4">
 
-              <div className="row">
-                <div className="col">
-                  <label className="mt-1 form-label" htmlFor="organization">Organization:</label>
-                  <input id="organization" className="mt-0 form-control" type="text" name="organization" autoComplete="organization" data-label="organization" />
-                  <small id="organization-error" className="error">{this.state.fieldErrors.organization}&nbsp;</small>
+              <div className="row pt-4">
+                <div className="col-xs-12 col-md-6">
+                  <div className="form-group">
+                    <fieldset style={{ marginBottom: '2em' }}>
+                      <legend><h3>My Org</h3></legend>
+                      <div className="row">
+                        <div className="col">
+                          <label className="mt-1 form-label" htmlFor="organization">Organization:</label>
+                          <input id="organization" className="mt-0 form-control" type="text" name="organization" autoComplete="organization" data-label="organization" />
+                          <small id="organization-error" className="error">{this.state.fieldErrors.organization}&nbsp;</small>
+                        </div>
+                      </div>
+
+                      <div className="row">
+                        <div className="col">
+                          <label className="mt-1 form-label" htmlFor="plan">Plan:</label>
+                          <select id="plan" className="mt-0 form-control" name="plan" data-label="plan">
+                            <option value="free">Free</option>
+                          </select>
+                          <small id="plan-error" className="error">{this.state.fieldErrors.plan}&nbsp;</small>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                <div className="col-xs-12 col-md-6">
+                  <div className="form-group">
+                    <fieldset form="user-sign-up input-group">
+                      <legend><h3>Create User</h3></legend>
+                        <div className="col">
+                          <label className="mt-1 form-label" htmlFor="email">E-mail:</label>
+                          <input id="email" className="mt-0 form-control" type="text" name="email" autoComplete="email" data-label="e-mail address" />
+                          <small id="email-error" className="error">{this.state.fieldErrors.email}&nbsp;</small>
+                        </div>
+                        <div className="col">
+                          <label className="mt-1 form-label" htmlFor="confirm-email">Confirm E-mail:</label>
+                          <input id="confirm-email" className="mt-0 form-control" type="text" name="confirm-email" autoComplete="email" data-label="e-mail address" />
+                          <small id="confirm-email-error" className="error">{this.state.fieldErrors['confirm-email']}&nbsp;</small>
+                        </div>
+                        {/* <div className="col">
+                          <label className="mt-1 form-label" htmlFor="first-name">First Name:</label>
+                          <input id="first-name" className="mt-0 form-control" type="text" name="first-name" autoComplete="given-name" data-label="first name" />
+                          <small id="first-name-error" className="error">{this.state.fieldErrors['first-name']}&nbsp;</small>
+                        </div>
+                        <div className="col">
+                          <label className="mt-1 form-label" htmlFor="last-name">Last Name:</label>
+                          <input id="last-name" className="mt-0 form-control" type="text" name="last-name" autoComplete="family-name" data-label="last name" />
+                          <small id="last-name-error" className="error">{this.state.fieldErrors['last-name']}&nbsp;</small>
+                        </div> */}
+                        <div className="col">
+                          <label className="mt-1 form-label" htmlFor="password">Password:</label>
+                          <input id="password" className="mt-0 form-control" type="password" name="password" autoComplete="new-password" data-label="password" />
+                          <small id="password-error" className="error">{this.state.fieldErrors.password}&nbsp;</small>
+                        </div>
+                        <div className="col">
+                          <label className="mt-1 form-label" htmlFor="confirm-password">Confirm Password:</label>
+                          <input id="confirm-password" className="mt-0 form-control" type="password" name="confirm-password" autoComplete="new-password" data-label="confirmation password" />
+                          <small id="confirm-password-error" className="error">{this.state.fieldErrors['confirm-password']}&nbsp;</small>
+                        </div>
+
+                    </fieldset>
+                  </div>
                 </div>
               </div>
-
-              <div className="row">
-                <div className="col">
-                  <label className="mt-1 form-label" htmlFor="plan">Plan:</label>
-                  <select id="plan" className="mt-0 form-control" name="plan" data-label="plan">
-                    <option value="free">free</option>
-                  </select>
-                  <small id="plan-error" className="error">{this.state.fieldErrors.plan}&nbsp;</small>
-                </div>
-              </div>
-            </fieldset>
-
-            <fieldset form="user-sign-up input-group">
-              <legend><h3>Create User</h3></legend>
-
-              <div className="row">
-                <div className="col">
-                  <label className="mt-1 form-label" htmlFor="email">E-mail:</label>
-                  <input id="email" className="mt-0 form-control" type="text" name="email" autoComplete="email" data-label="e-mail address" />
-                  <small id="email-error" className="error">{this.state.fieldErrors.email}&nbsp;</small>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col">
-                  <label className="mt-1 form-label" htmlFor="confirm-email">Confirm E-mail:</label>
-                  <input id="confirm-email" className="mt-0 form-control" type="text" name="confirm-email" autoComplete="email" data-label="e-mail address" />
-                  <small id="confirm-email-error" className="error">{this.state.fieldErrors['confirm-email']}&nbsp;</small>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col">
-                  <label className="mt-1 form-label" htmlFor="first-name">First Name:</label>
-                  <input id="first-name" className="mt-0 form-control" type="text" name="first-name" autoComplete="given-name" data-label="first name" />
-                  <small id="first-name-error" className="error">{this.state.fieldErrors['first-name']}&nbsp;</small>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col">
-                  <label className="mt-1 form-label" htmlFor="last-name">Last Name:</label>
-                  <input id="last-name" className="mt-0 form-control" type="text" name="last-name" autoComplete="family-name" data-label="last name" />
-                  <small id="last-name-error" className="error">{this.state.fieldErrors['last-name']}&nbsp;</small>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col">
-                  <label className="mt-1 form-label" htmlFor="password">Password:</label>
-                  <input id="password" className="mt-0 form-control" type="password" name="password" autoComplete="new-password" data-label="password" />
-                  <small id="password-error" className="error">{this.state.fieldErrors.password}&nbsp;</small>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col">
-                  <label className="mt-1 form-label" htmlFor="confirm-password">Confirm Password:</label>
-                  <input id="confirm-password" className="mt-0 form-control" type="password" name="confirm-password" autoComplete="new-password" data-label="confirmation password" />
-                  <small id="confirm-password-error" className="error">{this.state.fieldErrors['confirm-password']}&nbsp;</small>
-                </div>
-              </div>
-
-            </fieldset>
-
-            <br />
-            <button className="btn btn-primary float-right">Register</button>
+              <br />
+              <button className="btn btn-primary float-right">Register</button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     )
   }
 }
