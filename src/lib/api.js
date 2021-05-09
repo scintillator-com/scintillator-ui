@@ -1,6 +1,8 @@
 
 import CookieStorage from './cookie'
 import config from './config'
+import LocalStorage from './localStorage'
+import StorageItem from './storageItem'
 
 class Scintillator{
   static async fetchCreateOrg( args ){
@@ -17,7 +19,8 @@ class Scintillator{
     }
 
     try{
-      return await fetch( `${config.baseURL}/api/1.0/org`, init )
+      const response = await fetch( `${config.baseURL}/api/1.0/org`, init )
+      return response
     }
     catch( err ){
       console.error( `${err}` )
@@ -83,7 +86,9 @@ class Scintillator{
     }
 
     try{
-      return await fetch( `${config.baseURL}/api/1.0/journal?${query}`, init )
+      const response = await fetch( `${config.baseURL}/api/1.0/journal?${query}`, init )
+      Scintillator.setCache( `/api/1.0/journal?${query}`, init )
+      return response
     }
     catch( err ){
       console.error( `${err}` )
@@ -125,11 +130,18 @@ class Scintillator{
     }
 
     try{
-      return await fetch( `${config.baseURL}/api/1.0/moment/${id}`, init )
+      const response = await fetch( `${config.baseURL}/api/1.0/moment/${id}`, init )
+      Scintillator.setCache( `/api/1.0/moment/${id}`, init )
+      return response
     }
     catch( err ){
-      console.error( `${err}` )
-      throw err
+      if( this.isOffline( err ) ){
+        return Scintillator.getCache( `/api/1.0/moment/${id}`, init )
+      }
+      else{
+        console.error( `${err}` )
+        throw err
+      }
     }
   }
 
@@ -145,11 +157,18 @@ class Scintillator{
     }
 
     try{
-      return await fetch( `${config.baseURL}/api/1.0/history?${query}`, init )
+      const response = await fetch( `${config.baseURL}/api/1.0/history?${query}`, init )
+      Scintillator.setCache( `/api/1.0/history?${query}`, init )
+      return response
     }
     catch( err ){
-      console.error( `${err}` )
-      throw err
+      if( this.isOffline( err ) ){
+        return Scintillator.getCache( `/api/1.0/history?${query}`, init )
+      }
+      else{
+        console.error( `${err}` )
+        throw err
+      }
     }
   }
 
@@ -175,11 +194,18 @@ class Scintillator{
     }
 
     try{
-      return await fetch( `${config.baseURL}/api/1.0/project?${query}`, init )
+      const response = await fetch( `${config.baseURL}/api/1.0/project?${query}`, init )
+      Scintillator.setCache( `/api/1.0/project?${query}`, init )
+      return response
     }
     catch( err ){
-      console.error( `${err}` )
-      throw err
+      if( this.isOffline( err ) ){
+        return Scintillator.getCache( `/api/1.0/project?${query}`, init )
+      }
+      else{
+        console.error( `${err}` )
+        throw err
+      }
     }
   }
 
@@ -227,6 +253,18 @@ class Scintillator{
       console.error( `${err}` )
       throw err
     }
+  }
+
+  static getCache( url, init ){
+
+  }
+
+  static isOffline( err ){
+    return `${err}` === 'TypeError: Failed to fetch'
+  }
+
+  static setCache( url, init, response ){
+    //TOOD: ignore authorization header
   }
 }
 
