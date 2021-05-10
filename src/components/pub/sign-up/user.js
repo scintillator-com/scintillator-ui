@@ -74,7 +74,7 @@ class UserSignUp extends React.PureComponent{
 
     let response
     try{
-      response = await Scintillator.fetchCreateOrg( args )
+      response = await Scintillator.createOrg( args )
     }
     catch( err ){
       alert( `Oops please try again soon` )
@@ -103,7 +103,7 @@ class UserSignUp extends React.PureComponent{
   async postUser( args ){
     let response
     try{
-      response = await Scintillator.fetchCreateUser( args )
+      response = await Scintillator.createUser( args )
     }
     catch( err ){
       alert( `Oops please try again soon` )

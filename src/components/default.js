@@ -1,18 +1,13 @@
 
 import React from 'react'
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom"
 
 import LogIn from './pub/log-in'
 
-import CookieStorage from '../lib/cookie'
+import Scintillator from '../lib/api'
 
 function Default( props ){
-  const isLoggedIn = () => {
-    const auth = CookieStorage.get( 'authorization' )
-    return auth && auth.length ? true : false
-  }
-
-  if( isLoggedIn() ){
+  if( Scintillator.isLoggedIn() ){
     return <Redirect to="/projects" />
   }
   else{
@@ -36,9 +31,7 @@ function Default( props ){
 
           </div>
         </div>
-        {/* 
         <LogIn onLogin={props.onLogin} /> 
-        */}
       </div>
     )
   }

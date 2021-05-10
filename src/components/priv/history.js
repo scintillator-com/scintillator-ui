@@ -55,7 +55,7 @@ class History extends React.PureComponent{
 
     let response
     try{
-      response = await Scintillator.fetchMoments( query )
+      response = await Scintillator.listMoments( query )
     }
     catch( err ){
       alert( `Oops please try again soon` )
@@ -116,7 +116,7 @@ class History extends React.PureComponent{
 
     let response
     try{
-      response = await Scintillator.fetchJournal( query )
+      response = await Scintillator.listJournals( query )
     }
     catch( err ){
       alert( `Oops please try again soon` )
@@ -194,11 +194,6 @@ class History extends React.PureComponent{
     return weeks
   }
 
-  static isLoggedIn(){
-    const auth = CookieStorage.get( 'authorization' )
-    return auth && auth.length ? true : false
-  }
-
   static iso8601( date ){
     if( !date )
       date = new Date()
@@ -237,7 +232,7 @@ class History extends React.PureComponent{
   }
 
   render(){
-    if( !History.isLoggedIn() )
+    if( !Scintillator.isLoggedIn() )
       return <Redirect to="/" />
 
 

@@ -12,22 +12,17 @@ class LogIn extends React.PureComponent{
     this.logIn = this.logIn.bind( this )
   }
 
-  static isLoggedIn(){
-    const auth = CookieStorage.get( 'authorization' )
-    return auth && auth.length ? true : false
-  }
-
   logIn( e ){
     if( e.cancelable )
       e.preventDefault()
 
-    Scintillator.fetchLogIn( this.state.username, this.state.password )
+    Scintillator.doLogIn( this.state.username, this.state.password )
       .then( async ( response ) => {
         if( response.status === 200 ){
           const data = await response.json()
           const expires = new Date( data.expires )
           const maxAge = Math.floor( (expires.getTime() - Date.now()) / 1000 )
-          CookieStorage.set( 'authorization', data.token, { expires, maxAge })
+          CookieStorage.setItem( 'authorization', data.token, { expires, maxAge })
           this.props.onLogin()
         }
         //else if( response.status === 401 ){

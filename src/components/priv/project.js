@@ -15,20 +15,15 @@ class Project extends React.PureComponent{
   }
 
   componentDidMount(){
-    Scintillator.fetchProjects()
+    Scintillator.listProjects()
       .then( async ( response ) => {
         const projects = await response.json() || []
         this.props.setProjects( projects )
       })
   }
 
-  static isLoggedIn(){
-    const auth = CookieStorage.get( 'authorization' )
-    return auth && auth.length ? true : false
-  }
-
   render(){
-    if( !Project.isLoggedIn() )
+    if( !Scintillator.isLoggedIn() )
       return <Redirect to="/" />
 
 
@@ -78,7 +73,7 @@ class Project extends React.PureComponent{
 
     let response
     try{
-      response = await Scintillator.fetchUnlockProject( project )
+      response = await Scintillator.unlockProject( project )
     }
     catch( err ){
       alert( `Oops please try again soon` )
@@ -90,7 +85,7 @@ class Project extends React.PureComponent{
       let data = await response.json()
       console.debug( data )
 
-      response = await Scintillator.fetchProjects()
+      response = await Scintillator.listProjects()
       const projects = await response.json() || []
       this.props.setProjects( projects )
     }

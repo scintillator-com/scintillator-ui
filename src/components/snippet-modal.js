@@ -1,31 +1,38 @@
 
 import React from 'react'
 
-import CookieStorage from '../lib/cookie'
 import config from '../lib/config'
+import Scintillator from '../lib/api'
 
 import './snippet-modal.css'
-import Scintillator from '../lib/api'
 
 class SnippetModal extends React.PureComponent{
   constructor( props ){
     super( props )
 
-    debugger
-    //TODO: props.formatter
+    //TODO: props.formatter from project
 
     this.state = {
+      'generators': null,
+      'themes':     [
+        { name: 'default', label: 'Default' }
+      ],
+
+      //TODO: snippet model?
       'snippet': {
         'snippet_id': null,
         'moment_id': this.props.moment.moment_id,
-        'formatter': {
-          'name':     'js-fetch',
-          'language': 'javascript', //
-          'library':  'fetch'
-        },
+        'formatter': null,
+        /*
+          {
+            'name':     'js-fetch',
+            'language': 'javascript', //
+            'library':  'fetch'
+          },
+        */
         'config': {
-          'method': 'async',
-          'decode': false,
+          //'method': 'async',
+          //'decode': false,
           'body_params':   [],
           'header_params': [],
           'query_params':  []
@@ -39,14 +46,10 @@ class SnippetModal extends React.PureComponent{
   }
 
   static cloneSnippet( snippet ){
-    return {
+    const clone = {
       'snippet_id': snippet.snippet_id,
       'moment_id': snippet.moment_id,
-      'formatter': {
-        'name':     snippet.formatter.name,
-        'language': snippet.formatter.language,
-        'library':  snippet.formatter.library
-      },
+      'formatter': null,
       'config': {
         'method':   snippet.config.method,
         'decode':   snippet.config.decode,
@@ -54,6 +57,40 @@ class SnippetModal extends React.PureComponent{
         'header_params': snippet.config.header_params.slice(),
         'query_params':  snippet.config.query_params.slice()
       }
+    }
+
+    if( false ){
+      clone.formatter = {
+        'name':     snippet.formatter.name,
+        'language': snippet.formatter.language,
+        'library':  snippet.formatter.library
+      }
+    }
+
+    return clone
+  }
+
+  componentDidMount(){
+    if( !this.state.generators ){
+      Scintillator.listGenerators()
+        .then( async ( response ) => {
+          if( response.ok ){
+            const data = await response.json()
+            //TODO: sort by label
+            this.setState({ 'generators': data })
+          }
+          else{
+            const text = await response.text()
+
+            try{
+              const data = JSON.parse( text )
+              alert( `Oops: ${data.code} - ${data.message}` )
+            }
+            catch(_){
+              alert( `Oops: ${text}` )
+            }
+          }
+        })
     }
   }
 
@@ -84,7 +121,7 @@ class SnippetModal extends React.PureComponent{
   }
 
   render(){
-    if( !this.props.moment ){
+    if( !this.props.moment || !this.state.generators ){
       return (
         <span>Loading...</span>
       )
@@ -117,7 +154,26 @@ class SnippetModal extends React.PureComponent{
           {this.renderRequest( this.props.moment.request, true )}
           </table>
           <br />
-          <button style={{ float: 'right' }} onClick={this.upsertSnippet}>{operation}</button>
+
+          <table width="100%">
+          <tr>
+            <td>Format: <select>
+              {this.state.generators.map( g => (
+                <option value={g.name}>{g.label}</option>
+              ))}
+              </select>
+            </td>
+
+            <td>Theme: <select>
+              {this.state.themes.map( theme => (
+                <option value={theme.name}>{theme.label}</option>
+              ))}
+              </select>
+            </td>
+
+            <td><button style={{ float: 'right' }} onClick={this.upsertSnippet}>{operation}</button></td>
+          </tr>
+          </table>
 
           {preview}
         </div>
@@ -255,16 +311,17 @@ class SnippetModal extends React.PureComponent{
   }
 
   async upsertSnippet( e ){
+    debugger
     if( e && e.cancelable )
       e.preventDefault()
 
-    const authorization = CookieStorage.get( 'authorization' )
+    /*
     const init = {
       mode:    'cors',
       method:  'POST',
       headers: {
         'Accept': 'application/json',
-        'Authorization': `bearer ${authorization}`,
+        'Authorization': `bearer ${Scintillator.getAuthToken()}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify( this.state.snippet )
@@ -275,13 +332,14 @@ class SnippetModal extends React.PureComponent{
       init.method = 'PUT'
       url = `${config.baseURL}/api/1.0/snippet/${this.state.snippet.snippet_id}`
     }
+    */
 
     let response
     try{
       if( this.state.snippet.snippet_id )
-        response = await Scintillator.fetchUpdateSnippet( this.state.snippet )
+        response = await Scintillator.updateSnippet( this.state.snippet )
       else
-        response = await Scintillator.fetchCreateSnippet( this.state.snippet )
+        response = await Scintillator.createSnippet( this.state.snippet )
     }
     catch( err ){
       alert( `Oops please try again soon` )

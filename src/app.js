@@ -16,9 +16,7 @@ import Project from './components/priv/project.js'
 //mixed
 import Moment from './components/moment.js'
 
-
 //data
-import CookieStorage from './lib/cookie'
 import Scintillator from './lib/api'
 
 import {ChevronDownIcon, ChevronRightIcon} from '@primer/octicons-react'
@@ -35,13 +33,8 @@ class App extends React.PureComponent{
     this.setProjects = this.setProjects.bind( this )
   }
 
-  static isLoggedIn(){
-    const auth = CookieStorage.get( 'authorization' )
-    return auth && auth.length ? true : false
-  }
-
   onLogin(){
-    Scintillator.fetchProjects()
+    Scintillator.listProjects()
       .then( projects => {
         if( projects && projects.length )
           this.setProjects( projects )
@@ -75,7 +68,7 @@ class App extends React.PureComponent{
   }
 
   renderLeftNav(){
-    if( App.isLoggedIn() ){
+    if( Scintillator.isLoggedIn() ){
       let journalClass = null
       if( window.location.pathname.indexOf( '/journal' ) === 0 )
         journalClass = 'expanded'

@@ -15,17 +15,12 @@ class Dashboard extends React.PureComponent{
   }
 
   componentDidMount(){
-    Scintillator.fetchProjects()
+    Scintillator.listProjects()
       .then( this.props.setProjects )
   }
 
-  static isLoggedIn(){
-    const auth = CookieStorage.get( 'authorization' )
-    return auth && auth.length ? true : false
-  }
-
   render(){
-    if( !Dashboard.isLoggedIn() )
+    if( !Scintillator.isLoggedIn() )
       return <Redirect to="/" />
 
 
@@ -73,8 +68,8 @@ class Dashboard extends React.PureComponent{
     if( e.cancelable )
       e.preventDefault()
 
-    Scintillator.fetchUnlockProject( project )
-      .then( Scintillator.fetchProjects )
+    Scintillator.unlockProject( project )
+      .then( Scintillator.listProjects )
       .catch( err => {
         //ignored
       })

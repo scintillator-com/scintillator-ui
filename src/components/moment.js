@@ -2,10 +2,8 @@
 import React from 'react'
 import { Link, Redirect } from "react-router-dom"
 
-import SnippetModal from './snippet-modal'
-
-import CookieStorage from '../lib/cookie'
 import Scintillator from '../lib/api'
+import SnippetModal from './snippet-modal'
 
 import {LockIcon, UnlockIcon} from '@primer/octicons-react'
 
@@ -32,7 +30,7 @@ class Moment extends React.PureComponent{
   async fetchMoment( id ){
     let response = null
     try{
-      response = await Scintillator.fetchMoment( id )
+      response = await Scintillator.getMoment( id )
     }
     catch( err ){
       alert( `Oops please try again soon` )
@@ -60,13 +58,8 @@ class Moment extends React.PureComponent{
     this.setState({ 'showSnippetModal': false })
   }
 
-  static isLoggedIn(){
-    const auth = CookieStorage.get( 'authorization' )
-    return auth && auth.length ? true : false
-  }
-
   render(){
-    if( !Moment.isLoggedIn() )
+    if( !Scintillator.isLoggedIn() )
       return <Redirect to="/" />
 
 
@@ -179,6 +172,9 @@ class Moment extends React.PureComponent{
   }
 
   static renderResponse( response ){
+    if( !response )
+      return null
+
     return (
       <tbody>
       <tr>

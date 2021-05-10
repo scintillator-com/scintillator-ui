@@ -1,12 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './nav.css'
 
 class Nav extends React.PureComponent{
-    constructor( props ){
-        super( props )
-
-    }
-
     // Each of these notification icons/controls should probably be their own Component where data gets sent to display the badges for notification totals etc.
     render(){
         return (
