@@ -31,6 +31,7 @@ function Default( props ){
 
           </div>
         </div>
+
         <LogIn onLogin={props.onLogin} /> 
       </div>
     )
