@@ -44,12 +44,15 @@ class Project extends React.PureComponent{
     return (
       <div className="projects">
         {this.props.projects.map( project => {
+          const host = project.host.replace( '-', '\u2011' )
+            .replace( '.', '\u200b.' )
+
           if( project.is_locked ){
             return (
               <div key={project.host} className="project" onClick={e => this.unlockProject( e, project )}>
                 <LockIcon className="octicon locked" />
                 <span className="moments">{project.moments} Moments</span>
-                <span className="host">{project.host}</span>
+                <span className="host">{host}</span>
               </div>
             )
           }
@@ -58,7 +61,7 @@ class Project extends React.PureComponent{
               <Link to={`/project/${project.host}`} key={project.host} className="project">
                 <UnlockIcon className="octicon unlocked"/>
                 <span className="moments">{project.moments} Moments</span>
-                <span className="host">{project.host}</span>
+                <span className="host">{host}</span>
               </Link>
             )
           }
