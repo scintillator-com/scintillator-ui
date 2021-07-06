@@ -69,7 +69,6 @@ class FormValidator{
       return input.name || input.id
     }
     else{
-      debugger
       throw new ConfigurationError( `Configuration Error: the input "${FormValidator.getLabel( input, true )}" must provide the "name" or "id" attributes` )
     }
   }

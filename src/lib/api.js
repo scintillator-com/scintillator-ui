@@ -15,8 +15,6 @@ class Scintillator{
     return !!authItem
   }
 
-
-
   static async createOrg( args ){
     const init = {
       mode:   'cors',
@@ -47,7 +45,7 @@ class Scintillator{
         'Authorization': `Bearer ${Scintillator.getAuthToken()}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify( this.state.snippet )
+      body: JSON.stringify( snippet )
     }
 
     try{

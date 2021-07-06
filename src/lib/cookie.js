@@ -3,7 +3,7 @@ import StorageItem from "./storage/item"
 //re: https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
 class CookieStorage{
   static clear(){
-    debugger
+    throw new Error( 'Not implemented: CookieStorage.clear' )
   }
 
   static delete( name ){
@@ -32,7 +32,7 @@ class CookieStorage{
   }
 
   static removeItem( key ){
-    debugger
+    throw new Error( 'Not implemented: CookieStorage.removeItem' )
     return CookieStorage.delete( key )
   }
 

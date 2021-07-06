@@ -10,7 +10,7 @@ class SnippetModal extends React.PureComponent{
   constructor( props ){
     super( props )
 
-    //TODO: props.formatter from project
+    //TODO: props.generator from project
 
     this.state = {
       'generators': null,
@@ -22,7 +22,7 @@ class SnippetModal extends React.PureComponent{
       'snippet': {
         'snippet_id': null,
         'moment_id': this.props.moment.moment_id,
-        'formatter': null,
+        'generator': null,
         /*
           {
             'name':     'js-fetch',
@@ -40,16 +40,32 @@ class SnippetModal extends React.PureComponent{
       }
     }
 
-    this.handleChange = this.handleChange.bind( this )
+    this.handleArgsChange   = this.handleArgsChange.bind( this )
+    this.handleGeneratorChange = this.handleGeneratorChange.bind( this )
+    this.handleThemeChange  = this.handleThemeChange.bind( this )
+
     this.renderRequest = this.renderRequest.bind( this )
     this.upsertSnippet = this.upsertSnippet.bind( this )
+  }
+
+  static cloneGenerator( generator ){
+    const clone = {
+      language: generator.language,
+      library:  generator.library,
+      name:     generator.name
+    }
+
+    if( generator.label )
+      clone.label = generator.label
+
+    return clone
   }
 
   static cloneSnippet( snippet ){
     const clone = {
       'snippet_id': snippet.snippet_id,
       'moment_id': snippet.moment_id,
-      'formatter': null,
+      'generator': null,
       'config': {
         'method':   snippet.config.method,
         'decode':   snippet.config.decode,
@@ -59,12 +75,8 @@ class SnippetModal extends React.PureComponent{
       }
     }
 
-    if( false ){
-      clone.formatter = {
-        'name':     snippet.formatter.name,
-        'language': snippet.formatter.language,
-        'library':  snippet.formatter.library
-      }
+    if( snippet.generator ){
+      clone.generator = SnippetModal.cloneGenerator( snippet.generator )
     }
 
     return clone
@@ -75,9 +87,24 @@ class SnippetModal extends React.PureComponent{
       Scintillator.listGenerators()
         .then( async ( response ) => {
           if( response.ok ){
-            const data = await response.json()
-            //TODO: sort by label
-            this.setState({ 'generators': data })
+            const generators = await response.json()
+            generators.sort(( left, right ) => {
+              if( left.label < right.label )
+                return -1
+              else if( left.label > right.label )
+                return 1
+              else return 0
+            })
+            
+            this.setState( state => {
+              const clone = SnippetModal.cloneSnippet( state.snippet )
+              clone.generator = SnippetModal.cloneGenerator( generators[0] )
+
+              return {
+                'generators': generators,
+                'snippet': clone
+              }
+            })
           }
           else{
             const text = await response.text()
@@ -94,7 +121,7 @@ class SnippetModal extends React.PureComponent{
     }
   }
 
-  handleChange( e ){
+  handleArgsChange( e ){
     this.setState( state => {
       const snippet = SnippetModal.cloneSnippet( state.snippet )
 
@@ -118,6 +145,20 @@ class SnippetModal extends React.PureComponent{
         return { snippet }
       }
     })
+  }
+
+  handleGeneratorChange( e ){
+    const generator = this.state.generators.find( g => g.name === e.target.value )
+
+    this.setState( state => {
+      const snippet = SnippetModal.cloneSnippet( state.snippet )
+      snippet.generator = SnippetModal.cloneGenerator( generator )
+      return { snippet }
+    })
+  }
+
+  handleThemeChange( e ){
+
   }
 
   render(){
@@ -156,23 +197,25 @@ class SnippetModal extends React.PureComponent{
           <br />
 
           <table width="100%">
+          <tbody>
           <tr>
-            <td>Format: <select>
+            <td>Format: <select onChange={this.handleGeneratorChange}>
               {this.state.generators.map( g => (
-                <option value={g.name}>{g.label}</option>
+                <option key={g.name} value={g.name} data={g}>{g.label}</option>
               ))}
               </select>
             </td>
 
-            <td>Theme: <select>
+            <td>Theme: <select onChange={this.handleThemeChange}>
               {this.state.themes.map( theme => (
-                <option value={theme.name}>{theme.label}</option>
+                <option key={theme.name} value={theme.name} data={theme}>{theme.label}</option>
               ))}
               </select>
             </td>
 
             <td><button style={{ float: 'right' }} onClick={this.upsertSnippet}>{operation}</button></td>
           </tr>
+          </tbody>
           </table>
 
           {preview}
@@ -217,7 +260,7 @@ class SnippetModal extends React.PureComponent{
     for( let [ key, value ] of Object.entries( body ) ){
       rows.push(
         <tr key={`body-${key}`}>
-          <td className="tac"><input type="checkbox" name="body_params" value={key} onChange={this.handleChange} /></td>
+          <td className="tac"><input type="checkbox" name="body_params" value={key} onChange={this.handleArgsChange} /></td>
           <td className="no-wrap">{key}</td>
           <td className="fixed-300">{JSON.stringify(value)}</td>
         </tr>
@@ -255,7 +298,7 @@ class SnippetModal extends React.PureComponent{
     headers.sort(( l, r ) => { return l[k] < r[k] ? -1 : 1 })
     const rows = headers.map( h => (
       <tr key={`header-${h[k]}`}>
-        <td className="tac"><input type="checkbox" name="header_params" value={h[k]} onChange={this.handleChange} /></td>
+        <td className="tac"><input type="checkbox" name="header_params" value={h[k]} onChange={this.handleArgsChange} /></td>
         <td className="no-wrap">{h[k]}</td>
         <td className="fixed-300">{h[v]}</td>
       </tr>
@@ -293,7 +336,7 @@ class SnippetModal extends React.PureComponent{
     request.query_data.sort(( l, r ) => { return l[k] < r[k] ? -1 : 1 })
     const rows = request.query_data.map( h => (
       <tr key={`query-${h[k]}`}>
-        <td className="tac"><input type="checkbox" name="query_params" value={h[k]} onChange={this.handleChange} /></td>
+        <td className="tac"><input type="checkbox" name="query_params" value={h[k]} onChange={this.handleArgsChange} /></td>
         <td className="no-wrap">{h[k]}</td>
         <td className="fixed-300">{h[v]}</td>
       </tr>
@@ -311,7 +354,6 @@ class SnippetModal extends React.PureComponent{
   }
 
   async upsertSnippet( e ){
-    debugger
     if( e && e.cancelable )
       e.preventDefault()
 

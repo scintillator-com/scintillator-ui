@@ -70,8 +70,6 @@ class UserSignUp extends React.PureComponent{
   }
 
   async postOrg( args ){
-    debugger
-
     let response
     try{
       response = await Scintillator.createOrg( args )
