@@ -1,0 +1,40 @@
+.list-header{
+    padding:20px 15px;
+    background-color: rgb(235 235 235) !important;
+    font-size: 16px;
+    font-weight: 500;
+    border:1px solid rgb(148, 148, 148);
+    border-radius:5px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+.list-header .fa{
+    margin-right: 10px;
+}
+.method-wrapper{
+    font-size: 14px;
+}
+.method-wrapper .method .name{
+    margin-left: 10px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: #fff;
+}
+.method-wrapper .method .name.red{
+    background-color:red
+}
+.method-wrapper .method .name.green{
+    background-color:rgb(21, 209, 46)
+}
+.bg-green{
+    background-color:rgb(21, 209, 46)
+}
+.method-wrapper .status .miss .flag{
+    width:10px;
+    height:10px;
+    border-radius: 50%;
+}
+.miss .flag.yellow{
+    background-color:yellow;
+}
