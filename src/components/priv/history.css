@@ -13,10 +13,13 @@
     margin-right: 10px;
 }
 .method-wrapper{
-    font-size: 14px;
+    font-size: 16px;
+}
+.method-wrapper .method{
+    width:90px
 }
 .method-wrapper .method .name{
-    margin-left: 15px;
+    margin-left: 5px;
     padding: 1px 5px;
     border-radius: 3px;
     color:black;
@@ -37,7 +40,7 @@
 .bg-orange{
     background-color: #ffcc99;
     width:38px;
-    margin-left: 20px;
+    /* margin-left: 20px; */
 }
 
 .method-wrapper .status blue{
@@ -47,7 +50,7 @@
 .bg-blue{
     background-color: #9090ff;
     width:38px;
-    margin-left: 20px;
+    /* margin-left: 20px; */
 
 }
 
@@ -56,14 +59,23 @@
 }
 .bg-green{
     background-color:#80ff80;
-    /* asdasjdasjdoa */
 }
 .method-wrapper .status .miss .flag{
     width:10px;
     height:10px;
     border-radius: 40px;
-    margin-left: 15px;
-
+}
+.method-wrapper .status .miss .flag .repo-language-color{
+    height: 100%;
+    width:100%;
+    top: unset;
+    position: unset;
+    display: block;
+}
+.method-wrapper .status{
+    padding: 4px 0px;
+    min-width:80px;
+    max-width:100px;
 }
 .miss .flag.yellow{
     background-color:rgb(241, 224, 90);
@@ -75,6 +87,7 @@
 
 .status .code{
     border-radius:4px;
+    width: 50%;
    
 }
 
