@@ -16,25 +16,65 @@
     font-size: 14px;
 }
 .method-wrapper .method .name{
-    margin-left: 10px;
+    margin-left: 15px;
     padding: 1px 5px;
     border-radius: 3px;
-    color: #fff;
+    color:black;
 }
 .method-wrapper .method .name.red{
-    background-color:red
+    background-color:#ff9090;
 }
+
+.bg-red{
+    background-color:#ff9090;
+}
+
+.method-wrapper .status orange{
+    background-color: #ffcc99;
+   
+}
+
+.bg-orange{
+    background-color: #ffcc99;
+    width:38px;
+    margin-left: 20px;
+}
+
+.method-wrapper .status blue{
+    background-color:#9090ff
+}
+
+.bg-blue{
+    background-color: #9090ff;
+    width:38px;
+    margin-left: 20px;
+
+}
+
 .method-wrapper .method .name.green{
-    background-color:rgb(21, 209, 46)
+    background-color:#80ff80;
 }
 .bg-green{
-    background-color:rgb(21, 209, 46)
+    background-color:#80ff80;
+    /* asdasjdasjdoa */
 }
 .method-wrapper .status .miss .flag{
     width:10px;
     height:10px;
-    border-radius: 50%;
+    border-radius: 40px;
+    margin-left: 15px;
+
 }
 .miss .flag.yellow{
-    background-color:yellow;
+    background-color:rgb(241, 224, 90);
 }
+
+.content-type{
+    text-align:center;
+}
+
+.status .code{
+    border-radius:4px;
+   
+}
+

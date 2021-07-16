@@ -7,6 +7,8 @@ import {ClockIcon, EllipsisIcon, LockIcon, UnlockIcon} from '@primer/octicons-re
 import CookieStorage from '../../lib/cookie'
 import Scintillator from '../../lib/api'
 
+import './history.css';
+
 class History extends React.PureComponent{
   constructor( props ){
     super( props )
@@ -281,7 +283,533 @@ class History extends React.PureComponent{
 
     return (
       <div>
-        <h3 className="tac" style={{ background: '#ccc' }}>{this.getHost()}</h3>
+        {/* <div className="list-header">
+          <i class="fa fa-folder-o" aria-hidden="true"></i>
+          <div>[</div>
+          <div className="tac" style={{ background: '#ccc' }}>{this.getHost()}</div>
+
+        </div> */}
+        <div className="list-group">
+          <div className="list-group-item list-group-item-action disabled list-header">
+            
+            <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+            <div>[</div>
+            <div className="tac" style={{ color: '#222', marginLeft: 5  }}>{this.getHost()}</div>
+          </div>
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name bg-red">POST</div>
+              </div>
+              <div className="col-10 p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/carrier/DID/find/</div>
+              </div>
+              <div className="col-1 p-1 align-items-center status">
+                <div className="code text-center"></div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag "></div>
+                  <div className="bg-green content-type  ms-1 rounded-1 text-black"></div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+          
+  
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1  p-1 d-flex align-items-center method px-1 border-dark border-end ">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name bg-red">POST</div>
+              </div>
+              <div className="col-10 p-1  d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/carrier/TF/find/</div>
+              </div>
+              <div className="col-1   align-items-center status">
+                <div className="  bg-blue   code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className=" content-type ms-1 rounded-1 text-black">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+          
+  
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1  p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name bg-red">POST</div>
+              </div>
+              <div className="col-10 p-1 d-flex align-items-center path  px-1 border-dark border-end ">
+                <div> rest/v1/carrier/TF/find/  </div>
+              </div>
+              <div className="col-1  align-items-center status">
+                <div className=" bg-orange  code text-center">400</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+          
+         
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name bg-red">POST</div>
+              </div>
+              <div className="col-10  p-1  d-flex align-items-center path  px-1 border-dark border-end">
+                <div>rest/v1/carrier/DID/find/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className="  code text-center">500</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type    ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1  p-1 d-flex align-items-center method  px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name bg-red">POST</div>
+              </div>
+              <div className="col-10 p-1  d-flex align-items-center path  px-1 border-dark border-end">
+                <div>  rest/v1/carrier/DID/find/      </div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className="  code text-center">500</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name bg-red">POST</div>
+              </div>
+              <div className="col-10  p-1 d-flex align-items-center path px-1 border-dark border-end ">
+                <div>rest/v1/carrier/DID/find/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className="  code text-center">500</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/carrier/DID?country=US</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+         
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>.../inventory/DID/%2B17077316021/label/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name ">DELETE</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>.../inventory/DID/%2B17077316021/label/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>.../inventory/DID/%2B17077316021/label/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name ">PUT</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>.../inventory/DID/%2B17077316021/label/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name red">POST</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>.../inventory/DID/%2B17077316021/label/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-orange code text-center">400</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>.../inventory/DID/%2B17077316021/label/ </div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>.../inventory/DID/%2b17077316021/label/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-orange code text-center">400</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>.../inventory/DID/%2B17077316021/label/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>.../inventory/DID/%2b17077316021/label/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-orange code text-center">400</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/my/inventory/DID?endpoint=%2b17077316...</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/my/inventory/DID?endpoint=%2b17077316...</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>/rest/v1/my/inventory/DID?endpoint[]=%2b1707731...</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/my/inventory/DID?endpoint=%2b17077316...</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/my/DID/orders?pageSize=1&page=2</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/my/DID/orders?pageSize=1</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name green">GET</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/my/DID/orders/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name red">POST</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/my/DID/orders/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className=" bg-blue code text-center">200</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+
+
+
+          <div className="list-group-item list-group-item-action method-wrapper py-0">
+            <div className="row">
+              <div className="col-1 p-1 d-flex align-items-center method px-1 border-dark border-end">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+                <div className="name red">POST</div>
+              </div>
+              <div className="col-10   p-1 d-flex align-items-center path px-1 border-dark border-end">
+                <div>rest/v1/my/DID/orders/</div>
+              </div>
+              <div className="col-1 align-items-center status">
+                <div className="  code text-center">500</div>
+                <div className="miss text-center d-flex align-items-center px-0">
+                  <div className="flag yellow"></div>
+                  <div className="content-type ms-1">JSON</div>  
+                </div>              
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
         <table id="history">
         <thead>
         <tr>
@@ -297,7 +825,7 @@ class History extends React.PureComponent{
         {sections}
         </table>
 
-        {moreButton}
+            {moreButton}
       </div>
     )
   }
