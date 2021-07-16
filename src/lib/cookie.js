@@ -1,13 +1,26 @@
+import StorageItem from "./storage/item"
 
 //re: https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
 class CookieStorage{
+  static clear(){
+    throw new Error( 'Not implemented: CookieStorage.clear' )
+  }
+
   static delete( name ){
     //The cookie name and value can use encodeURIComponent() to ensure that the string does not contain any commas, semicolons, or whitespace (which are disallowed in cookie values).
     const cookie = encodeURIComponent( name ) +'=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
     document.cookie = cookie
   }
 
-  static get( name ){
+  static getItem( key ){
+    const cacheStr = CookieStorage.getValue( key )
+    if( cacheStr )
+      return StorageItem.load( cacheStr )
+    else
+      return undefined
+  }
+
+  static getValue( name ){
     const find = `${name}=`
     for( let cookie of document.cookie.split( /; / )){
       //TODO:  get string before = and decodeURIComponent?
@@ -18,7 +31,17 @@ class CookieStorage{
     return undefined
   }
 
-  static set( name, value, options ){
+  static removeItem( key ){
+    throw new Error( 'Not implemented: CookieStorage.removeItem' )
+    return CookieStorage.delete( key )
+  }
+
+  static setItem( key, value, options ){
+    const item = new StorageItem( value, options.expires )
+    return CookieStorage.setValue( key, item.toString(), options )
+  }
+
+  static setValue( name, value, options ){
     options = options || {}
 
     //The cookie name and value can use encodeURIComponent() to ensure that the string does not contain any commas, semicolons, or whitespace (which are disallowed in cookie values).

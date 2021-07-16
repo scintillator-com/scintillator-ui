@@ -1,0 +1,14 @@
+
+#moment td.value {
+	padding-left: 5px;
+}
+
+#moment .green {
+  color: green;
+}
+
+#moment .no-wrap {
+	white-space: nowrap;
+}
+
+

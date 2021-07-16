@@ -1,8 +1,8 @@
 
 import React from 'react'
 
-import CookieStorage from '../lib/cookie'
 import config from '../lib/config'
+import Scintillator from '../lib/api'
 
 import './snippet-modal.css'
 
@@ -10,18 +10,29 @@ class SnippetModal extends React.PureComponent{
   constructor( props ){
     super( props )
 
+    //TODO: props.generator from project
+
     this.state = {
+      'generators': null,
+      'themes':     [
+        { name: 'default', label: 'Default' }
+      ],
+
+      //TODO: snippet model?
       'snippet': {
         'snippet_id': null,
         'moment_id': this.props.moment.moment_id,
-        'formatter': {
-          'name':     'js-fetch',
-          'language': 'javascript', //
-          'library':  'fetch'
-        },
+        'generator': null,
+        /*
+          {
+            'name':     'js-fetch',
+            'language': 'javascript', //
+            'library':  'fetch'
+          },
+        */
         'config': {
-          'method': 'async',
-          'decode': false,
+          //'method': 'async',
+          //'decode': false,
           'body_params':   [],
           'header_params': [],
           'query_params':  []
@@ -29,20 +40,32 @@ class SnippetModal extends React.PureComponent{
       }
     }
 
-    this.handleChange = this.handleChange.bind( this )
+    this.handleArgsChange   = this.handleArgsChange.bind( this )
+    this.handleGeneratorChange = this.handleGeneratorChange.bind( this )
+    this.handleThemeChange  = this.handleThemeChange.bind( this )
+
     this.renderRequest = this.renderRequest.bind( this )
     this.upsertSnippet = this.upsertSnippet.bind( this )
   }
 
+  static cloneGenerator( generator ){
+    const clone = {
+      language: generator.language,
+      library:  generator.library,
+      name:     generator.name
+    }
+
+    if( generator.label )
+      clone.label = generator.label
+
+    return clone
+  }
+
   static cloneSnippet( snippet ){
-    return {
+    const clone = {
       'snippet_id': snippet.snippet_id,
       'moment_id': snippet.moment_id,
-      'formatter': {
-        'name':     snippet.formatter.name,
-        'language': snippet.formatter.language,
-        'library':  snippet.formatter.library
-      },
+      'generator': null,
       'config': {
         'method':   snippet.config.method,
         'decode':   snippet.config.decode,
@@ -51,9 +74,54 @@ class SnippetModal extends React.PureComponent{
         'query_params':  snippet.config.query_params.slice()
       }
     }
+
+    if( snippet.generator ){
+      clone.generator = SnippetModal.cloneGenerator( snippet.generator )
+    }
+
+    return clone
   }
 
-  handleChange( e ){
+  componentDidMount(){
+    if( !this.state.generators ){
+      Scintillator.listGenerators()
+        .then( async ( response ) => {
+          if( response.ok ){
+            const generators = await response.json()
+            generators.sort(( left, right ) => {
+              if( left.label < right.label )
+                return -1
+              else if( left.label > right.label )
+                return 1
+              else return 0
+            })
+            
+            this.setState( state => {
+              const clone = SnippetModal.cloneSnippet( state.snippet )
+              clone.generator = SnippetModal.cloneGenerator( generators[0] )
+
+              return {
+                'generators': generators,
+                'snippet': clone
+              }
+            })
+          }
+          else{
+            const text = await response.text()
+
+            try{
+              const data = JSON.parse( text )
+              alert( `Oops: ${data.code} - ${data.message}` )
+            }
+            catch(_){
+              alert( `Oops: ${text}` )
+            }
+          }
+        })
+    }
+  }
+
+  handleArgsChange( e ){
     this.setState( state => {
       const snippet = SnippetModal.cloneSnippet( state.snippet )
 
@@ -79,8 +147,22 @@ class SnippetModal extends React.PureComponent{
     })
   }
 
+  handleGeneratorChange( e ){
+    const generator = this.state.generators.find( g => g.name === e.target.value )
+
+    this.setState( state => {
+      const snippet = SnippetModal.cloneSnippet( state.snippet )
+      snippet.generator = SnippetModal.cloneGenerator( generator )
+      return { snippet }
+    })
+  }
+
+  handleThemeChange( e ){
+
+  }
+
   render(){
-    if( !this.props.moment ){
+    if( !this.props.moment || !this.state.generators ){
       return (
         <span>Loading...</span>
       )
@@ -113,7 +195,28 @@ class SnippetModal extends React.PureComponent{
           {this.renderRequest( this.props.moment.request, true )}
           </table>
           <br />
-          <button style={{ float: 'right' }} onClick={this.upsertSnippet}>{operation}</button>
+
+          <table width="100%">
+          <tbody>
+          <tr>
+            <td>Format: <select onChange={this.handleGeneratorChange}>
+              {this.state.generators.map( g => (
+                <option key={g.name} value={g.name} data={g}>{g.label}</option>
+              ))}
+              </select>
+            </td>
+
+            <td>Theme: <select onChange={this.handleThemeChange}>
+              {this.state.themes.map( theme => (
+                <option key={theme.name} value={theme.name} data={theme}>{theme.label}</option>
+              ))}
+              </select>
+            </td>
+
+            <td><button style={{ float: 'right' }} onClick={this.upsertSnippet}>{operation}</button></td>
+          </tr>
+          </tbody>
+          </table>
 
           {preview}
         </div>
@@ -136,8 +239,8 @@ class SnippetModal extends React.PureComponent{
       </tr>
       <tr>
         <td className="tac"><input type="checkbox" checked disabled /></td>
-        <td align="right">path</td>
-        <td>{request.path}</td>
+        <td>path</td>
+        <td className="fixed-300" title={request.path}>{request.path}</td>
       </tr>
 
       {this.renderQuery( request )}
@@ -157,7 +260,7 @@ class SnippetModal extends React.PureComponent{
     for( let [ key, value ] of Object.entries( body ) ){
       rows.push(
         <tr key={`body-${key}`}>
-          <td className="tac"><input type="checkbox" name="body_params" value={key} onChange={this.handleChange} /></td>
+          <td className="tac"><input type="checkbox" name="body_params" value={key} onChange={this.handleArgsChange} /></td>
           <td className="no-wrap">{key}</td>
           <td className="fixed-300">{JSON.stringify(value)}</td>
         </tr>
@@ -195,7 +298,7 @@ class SnippetModal extends React.PureComponent{
     headers.sort(( l, r ) => { return l[k] < r[k] ? -1 : 1 })
     const rows = headers.map( h => (
       <tr key={`header-${h[k]}`}>
-        <td className="tac"><input type="checkbox" name="header_params" value={h[k]} onChange={this.handleChange} /></td>
+        <td className="tac"><input type="checkbox" name="header_params" value={h[k]} onChange={this.handleArgsChange} /></td>
         <td className="no-wrap">{h[k]}</td>
         <td className="fixed-300">{h[v]}</td>
       </tr>
@@ -233,7 +336,7 @@ class SnippetModal extends React.PureComponent{
     request.query_data.sort(( l, r ) => { return l[k] < r[k] ? -1 : 1 })
     const rows = request.query_data.map( h => (
       <tr key={`query-${h[k]}`}>
-        <td className="tac"><input type="checkbox" name="query_params" value={h[k]} onChange={this.handleChange} /></td>
+        <td className="tac"><input type="checkbox" name="query_params" value={h[k]} onChange={this.handleArgsChange} /></td>
         <td className="no-wrap">{h[k]}</td>
         <td className="fixed-300">{h[v]}</td>
       </tr>
@@ -254,13 +357,13 @@ class SnippetModal extends React.PureComponent{
     if( e && e.cancelable )
       e.preventDefault()
 
-    const authorization = CookieStorage.get( 'authorization' )
+    /*
     const init = {
       mode:    'cors',
       method:  'POST',
       headers: {
         'Accept': 'application/json',
-        'Authorization': `bearer ${authorization}`,
+        'Authorization': `bearer ${Scintillator.getAuthToken()}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify( this.state.snippet )
@@ -271,28 +374,32 @@ class SnippetModal extends React.PureComponent{
       init.method = 'PUT'
       url = `${config.baseURL}/api/1.0/snippet/${this.state.snippet.snippet_id}`
     }
+    */
 
+    let response
     try{
-      const res = await fetch( url, init )
-      if( 200 <= res.status && res.status < 300 ){
-        const data = await res.json()
-        if( init.method === 'POST' ){
-          this.setState( state => {
-            const snippet = SnippetModal.cloneSnippet( state.snippet )
-            snippet.snippet_id = data.snippet_id
-            return { snippet }
-          })
-        }
-        else{
-          //NA
-        }
-      }
-      else{
-        //TODO
-      }
+      if( this.state.snippet.snippet_id )
+        response = await Scintillator.updateSnippet( this.state.snippet )
+      else
+        response = await Scintillator.createSnippet( this.state.snippet )
     }
     catch( err ){
-      console.error( String(err) )
+      alert( `Oops please try again soon` )
+      return false
+    }
+
+    if( response.ok ){
+      const data = await response.json()
+      this.setState( state => {
+        const snippet = SnippetModal.cloneSnippet( state.snippet )
+        snippet.snippet_id = data.snippet_id
+        return { snippet }
+      })
+    }
+    else{
+      const data = await response.json()
+      alert( `Oops: ${data.code} - ${data.message}` )
+      return false
     }
   }
 }

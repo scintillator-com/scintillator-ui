@@ -1,11 +1,12 @@
 
 import React from 'react'
-import { Redirect } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
 
+import Scintillator from '../lib/api'
 import SnippetModal from './snippet-modal'
 
-import CookieStorage from '../lib/cookie'
-import config from '../lib/config'
+import {LockIcon, UnlockIcon} from '@primer/octicons-react'
+
 
 class Moment extends React.PureComponent{
   constructor( props ){
@@ -27,31 +28,26 @@ class Moment extends React.PureComponent{
   }
 
   async fetchMoment( id ){
-    const authorization = CookieStorage.get( 'authorization' )
-    const init = {
-      mode:    'cors',
-      method:  'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `bearer ${authorization}`
-      }
-    }
-
     let response = null
     try{
-      response = await fetch( `${config.baseURL}/api/1.0/moment/${id}`, init )
+      response = await Scintillator.getMoment( id )
     }
     catch( err ){
-      console.warn( String(err) )
+      alert( `Oops please try again soon` )
+      return false
     }
 
-    if( response ){
+    if( response.ok ){
+    //if( response.status === 200 ){
       const data = await response.json()
-      if( response.status === 200 ){
-        if( data ){
-          this.setState({ 'moment': data })
-        }
+      if( data ){
+        this.setState({ 'moment': data })
       }
+    }
+    else{
+      const data = await response.json()
+      alert( `Oops: ${data.code} - ${data.message}` )
+      return false
     }
   }
 
@@ -62,13 +58,8 @@ class Moment extends React.PureComponent{
     this.setState({ 'showSnippetModal': false })
   }
 
-  static isLoggedIn(){
-    const auth = CookieStorage.get( 'authorization' )
-    return auth && auth.length ? true : false
-  }
-
   render(){
-    if( !Moment.isLoggedIn() )
+    if( !Scintillator.isLoggedIn() )
       return <Redirect to="/" />
 
 
@@ -83,7 +74,10 @@ class Moment extends React.PureComponent{
         {this.state.showSnippetModal ?
           this.renderModal( this.state.moment ) : null}
 
-        <table>
+        <Link to="/projects">Projects</Link> &gt;&nbsp;
+        <Link to={`/project/${this.state.moment.request.host}`}>{this.state.moment.request.host}</Link>
+
+        <table id="moment">
         {this.renderRequest( this.state.moment.request )}
         {Moment.renderResponse( this.state.moment.response )}
         </table>
@@ -106,8 +100,8 @@ class Moment extends React.PureComponent{
         headers.sort(( l, r ) => { return l.i - r.i })
         return headers.map( h => (
           <tr key={h.k}>
-            <td>{h.k}</td>
-            <td>{h.v}</td>
+            <td className="key no-wrap">{h.k}</td>
+            <td className="value">{h.v}</td>
           </tr>
         ))
       }
@@ -115,8 +109,8 @@ class Moment extends React.PureComponent{
         headers.sort(( l, r ) => { return l.index - r.index })
         return headers.map( h => (
           <tr key={h.key}>
-            <td>{h.key}</td>
-            <td>{h.value}</td>
+            <td className="key no-wrap">{h.key}</td>
+            <td className="value">{h.value}</td>
           </tr>
         ))
       }
@@ -134,6 +128,26 @@ class Moment extends React.PureComponent{
   }
 
   renderRequest( request ){
+    let query = null
+    if( request.query_string ){
+      query = (
+        <tr>
+          <td>query</td>
+          <td align="right" colSpan="2">?{request.query_string}</td>
+        </tr>
+      )
+    }
+
+
+    let schemeIcon
+    if( request.scheme === 'https' ){
+      schemeIcon = <LockIcon className="green" />
+    }
+    else{
+      schemeIcon = <UnlockIcon />
+    }
+
+
     return (
       <tbody>
       <tr>
@@ -144,16 +158,13 @@ class Moment extends React.PureComponent{
       </tr>
       <tr>
         <td><strong>{request.method}</strong></td>
-        <td>{request.host} <span className="icon-lock">{request.scheme}</span></td>
+        <td>{schemeIcon} {request.host}</td>
       </tr>
       <tr>
-        <td align="right">path</td>
+        <td>path</td>
         <td colSpan="2">{request.path}</td>
         </tr>
-      <tr>
-      <td align="right">query</td>
-        <td>{request.query_string}</td>
-      </tr>
+      {query}
       {Moment.renderHeaders( request.headers )}
       {Moment.renderBody( request )}
       </tbody>
@@ -161,6 +172,9 @@ class Moment extends React.PureComponent{
   }
 
   static renderResponse( response ){
+    if( !response )
+      return null
+
     return (
       <tbody>
       <tr>

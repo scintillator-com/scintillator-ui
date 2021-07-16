@@ -1,0 +1,60 @@
+
+#left-nav > ul {
+  margin: 0;
+  padding: 0;
+}
+
+#left-nav > ul ul {
+  list-style-type: disc;
+}
+
+#left-nav > ul > li {
+  margin: 1px 0;
+  padding: 0;
+  position: relative;
+}
+
+#left-nav a{
+  color: unset;
+  display: block;
+  text-decoration: none;
+}
+
+#left-nav a:hover{
+  background: white;
+}
+
+
+#left-nav li span {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(0, -25%);
+  vertical-align: super;
+}
+
+/* default: collapsed */
+#left-nav li .expand {
+  display: unset;
+}
+
+#left-nav li .collapse {
+  display: none;
+}
+
+#left-nav li > ul {
+  display: none;
+}
+
+/* expanded */
+#left-nav li.expanded .collapse {
+  display: unset;
+}
+
+#left-nav li.expanded .expand {
+  display: none;
+}
+
+#left-nav li.expanded > ul {
+  display: block;
+}
