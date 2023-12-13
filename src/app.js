@@ -5,6 +5,7 @@ import { BrowserRouter, Link, Route, Switch } from "react-router-dom"
 //public
 import _404 from './components/pub/404.js'
 import Default from './components/default.js'
+import LogOut from './components/pub/log-out.js'
 import UserSignUp from './components/pub/sign-up/user.js'
 
 //private
@@ -62,6 +63,7 @@ class App extends React.PureComponent{
   renderHeader(){
     return (
       <header>
+        <h4 style={{ float: 'right' }}><Link to="/log-out" style={{ color: 'inherit', textDecoration: 'none' }}>Log Out</Link></h4>
         <h1><Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>Scintillator</Link></h1>
       </header>
     )
@@ -139,11 +141,12 @@ class App extends React.PureComponent{
               <Route exact path="/">
                 <Default onLogin={this.onLogin} />
               </Route>
+              <Route path="/log-out" component={LogOut} />
               <Route path="/project/:project" component={History} />
               <Route path="/projects" render={props => <Project {...props} projects={this.state.projects} setProjects={this.setProjects} />} />
               <Route path="/moment/:momentId" render={props => <Moment {...props} />} />
               <Route path="/sign-up" component={UserSignUp} />
-              <Route path="/*" component={_404}>404</Route>
+              <Route path="/*" component={_404} />
             </Switch>
           </main>
         </div>

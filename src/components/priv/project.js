@@ -16,7 +16,10 @@ class Project extends React.PureComponent{
 
   componentDidMount(){
     Scintillator.fetchProjects()
-      .then( this.props.setProjects )
+      .then( async ( response ) => {
+        const projects = await response.json() || []
+        this.props.setProjects( projects )
+      })
   }
 
   static isLoggedIn(){
@@ -69,15 +72,41 @@ class Project extends React.PureComponent{
     )
   }
 
-  unlockProject( e, project ){
+  async unlockProject( e, project ){
     if( e.cancelable )
       e.preventDefault()
 
-    Scintillator.fetchUnlockProject( project )
-      .then( Scintillator.fetchProjects )
-      .catch( err => {
-        //ignored
-      })
+    let response
+    try{
+      response = await Scintillator.fetchUnlockProject( project )
+    }
+    catch( err ){
+      alert( `Oops please try again soon` )
+      return false
+    }
+
+    if( response.ok ){
+    //if( response.status === 201 ){
+      let data = await response.json()
+      console.debug( data )
+
+      response = await Scintillator.fetchProjects()
+      const projects = await response.json() || []
+      this.props.setProjects( projects )
+    }
+    //401 Unauthorized: please login
+    //402 Payment Required: please upgrade or prompt for purchase
+    else if( response.status === 402 ){
+      //TODO: this.promptPurchaseProject = project
+      //const data = await response.json()
+      alert( "Payment Required: please upgrade or purchase more projects... (not implemented)" )
+      //return data
+    }
+    //409 Conflict: please contact support
+    else{
+      const data = await response.json()
+      throw new Error( `Oops: ${data.code} - ${data.message}` )
+    }
   }
 }
 

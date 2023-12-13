@@ -22,14 +22,24 @@ class LogIn extends React.PureComponent{
       e.preventDefault()
 
     Scintillator.fetchLogIn( this.state.username, this.state.password )
-      .then( data => {
-        const expires = new Date( data.expires )
-        const maxAge = Math.floor( (expires.getTime() - Date.now()) / 1000 )
-        CookieStorage.set( 'authorization', data.token, { expires, maxAge })
-        this.props.onLogin()
+      .then( async ( response ) => {
+        if( response.status === 200 ){
+          const data = await response.json()
+          const expires = new Date( data.expires )
+          const maxAge = Math.floor( (expires.getTime() - Date.now()) / 1000 )
+          CookieStorage.set( 'authorization', data.token, { expires, maxAge })
+          this.props.onLogin()
+        }
+        //else if( response.status === 401 ){
+        //  data = await response.json()
+        //}
+        else{
+          const data = await response.json()
+          throw new Error( `Oops: ${data.code} - ${data.message}` )
+        }
       })
       .catch( err => {
-        alert( `${err}` )
+        alert( `Oops please try again soon` )
       })
   }
 

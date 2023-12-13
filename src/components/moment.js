@@ -4,10 +4,10 @@ import { Link, Redirect } from "react-router-dom"
 
 import SnippetModal from './snippet-modal'
 
-import {LockIcon, UnlockIcon} from '@primer/octicons-react'
-
 import CookieStorage from '../lib/cookie'
-import config from '../lib/config'
+import Scintillator from '../lib/api'
+
+import {LockIcon, UnlockIcon} from '@primer/octicons-react'
 
 
 class Moment extends React.PureComponent{
@@ -30,31 +30,26 @@ class Moment extends React.PureComponent{
   }
 
   async fetchMoment( id ){
-    const authorization = CookieStorage.get( 'authorization' )
-    const init = {
-      mode:    'cors',
-      method:  'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `bearer ${authorization}`
-      }
-    }
-
     let response = null
     try{
-      response = await fetch( `${config.baseURL}/api/1.0/moment/${id}`, init )
+      response = await Scintillator.fetchMoment( id )
     }
     catch( err ){
-      console.warn( String(err) )
+      alert( `Oops please try again soon` )
+      return false
     }
 
-    if( response ){
+    if( response.ok ){
+    //if( response.status === 200 ){
       const data = await response.json()
-      if( response.status === 200 ){
-        if( data ){
-          this.setState({ 'moment': data })
-        }
+      if( data ){
+        this.setState({ 'moment': data })
       }
+    }
+    else{
+      const data = await response.json()
+      alert( `Oops: ${data.code} - ${data.message}` )
+      return false
     }
   }
 
